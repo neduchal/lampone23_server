@@ -2,7 +2,7 @@ import os
 from glob import glob
 from setuptools import setup
 
-package_name = 'lampone32_server'
+package_name = 'lampone23_server'
 
 setup(
     name=package_name,
