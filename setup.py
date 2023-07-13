@@ -23,7 +23,9 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'lampone23_server = lampone23_server.lampone23_server:main'
+            'server = lampone23_server.server:main',
+            'processer = lampone23_server.processer:main',
+            'controller = lampone23_server.controller:main'            
         ],
     },
 )
