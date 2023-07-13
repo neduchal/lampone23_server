@@ -14,7 +14,7 @@ class LamponeServer(Node):
         self.host = "0.0.0.0"
         self.port = 9999
         self.server_address = (self.host, self.port)
-        # self.publisher_ = self.create_publisher(String, 'topic', 10)
+        self.publisher_ = self.create_publisher(String, '/lampone_server/received_msg', 10)
         #timer_period = 0.5  # seconds
         #self.timer = self.create_timer(timer_period, self.timer_callback)
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -25,6 +25,9 @@ class LamponeServer(Node):
             print(addr)
             print("received message: %s" % data)
             self.sock.sendto(b"MESSAGE RECEIVED", addr)
+            msg = String()
+            msg.data = data.decode('utf-8')
+            self.publisher_.publish(msg)
             
 
     def onShutdown(self):
