@@ -34,7 +34,7 @@ class LamponeServer(Node):
         super().__init__('lampone_server')
         self.host = "0.0.0.0"
         self.port = 9999
-        self.server_address = (self.host, self.port)
+        self.ServerAddress = ("0.0.0.0", 9999)
         # self.publisher_ = self.create_publisher(String, 'topic', 10)
         #timer_period = 0.5  # seconds
         #self.timer = self.create_timer(timer_period, self.timer_callback)
@@ -49,18 +49,8 @@ class LamponeServer(Node):
 
             #server.shutdown()
         """
-        #UDPServerObject = socketserver.ThreadingUDPServer(self.ServerAddress, ThreadedUDPRequestHandler)
-        #UDPServerObject.serve_forever()
-        self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self.sock.bind(self.server_address)
-
-        while True:
-            data, addr = self.sock.recvfrom(2048) # buffer size is 1024 bytes
-            print(addr)
-            print("received message: %s" % data)
-
-    def onShutdown(self):
-        self.sock.close()
+        UDPServerObject = socketserver.ThreadingUDPServer(self.ServerAddress, ThreadedUDPRequestHandler)
+        UDPServerObject.serve_forever()
 
     """
     def timer_callback(self):
