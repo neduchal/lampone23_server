@@ -4,29 +4,8 @@ from datetime import datetime
 
 import socketserver
 import socket
-import threading
 
 from std_msgs.msg import String
-
-class ThreadedUDPRequestHandler(Node, socketserver.BaseRequestHandler):
-
-    def __init__(self, request, client_address, server):
-        socketserver.BaseRequestHandler.__init__(self, request, client_address, server)
-        now = datetime.now() # current date and time
-        Node.__init__(self, 'lampone_server_handler_'+ now.strftime("%H%M%S"))
-        print("ok")
-
-    def handle(self):
-        print("ok")
-        data = self.request[0].strip()
-        socket = self.request[1]
-        print("{} wrote:".format(self.client_address[0]))
-        socket.sendto(data.upper(), self.client_address)
-        print(data)
-        pass
-
-class ThreadedUDPServer(socketserver.ThreadingMixIn, socketserver.UDPServer):
-    pass
 
 class LamponeServer(Node):
 
@@ -38,19 +17,6 @@ class LamponeServer(Node):
         # self.publisher_ = self.create_publisher(String, 'topic', 10)
         #timer_period = 0.5  # seconds
         #self.timer = self.create_timer(timer_period, self.timer_callback)
-        #self.i = 0
-        """
-        server = ThreadedUDPServer((self.host, self.port), ThreadedUDPRequestHandler)
-        with server:
-            server_thread = threading.Thread(target=server.serve_forever)
-            server_thread.daemon = True
-            server_thread.start()
-            print("Server loop running in thread:", server_thread.name)
-
-            #server.shutdown()
-        """
-        #UDPServerObject = socketserver.ThreadingUDPServer(self.ServerAddress, ThreadedUDPRequestHandler)
-        #UDPServerObject.serve_forever()
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.sock.bind(self.server_address)
 
@@ -58,6 +24,8 @@ class LamponeServer(Node):
             data, addr = self.sock.recvfrom(2048) # buffer size is 1024 bytes
             print(addr)
             print("received message: %s" % data)
+            self.sock.sendto(b"MESSAGE RECEIVED", addr)
+            
 
     def onShutdown(self):
         self.sock.close()
