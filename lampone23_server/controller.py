@@ -42,6 +42,7 @@ class LamponeServerRobotController(Node):
         self.arucoDict = cv2.aruco.Dictionary_get(cv2.aruco.DICT_6X6_50)
         self.arucoId = 1
         self.arucoParams = cv2.aruco.DetectorParameters_create()
+        self.cells = None
 
 
     def transform_image(self, img, src, dst):
@@ -174,18 +175,19 @@ class LamponeServerRobotController(Node):
         # Tento blok p;jde vyhledem ke statické kameře zavolat jenom jednou.
         # Předělat na service, který v případě, že už bude provedeno pouze vrátí hodnoty.
         # Tím se vše výrazně urychlí
-        img_gray = skimage.color.rgb2gray(img[:,:,:3])
-        points = self.get_grid(img_gray)
-        # Select corners of grid
-        src = np.array([[900,350], [3200, 350], [900, 2650], [3200, 2650]])
-        src_new = self.get_new_src_coordinates(src, points)
-        dst = np.array([[0, 0], [600, 0], [0, 600], [600, 600]])
-        # Transform
-        img_transformed = self.transform_image(img, src_new, dst)
-        # Detect points once more
-        transformed_gray = img_transformed[:,:,0] # Pick red channel only
-        points = self.get_grid(transformed_gray)
-        cells = self.get_cell_centers(points)
+        if self.cells == None:
+            img_gray = skimage.color.rgb2gray(img[:,:,:3])
+            points = self.get_grid(img_gray)
+            # Select corners of grid
+            src = np.array([[900,350], [3200, 350], [900, 2650], [3200, 2650]])
+            src_new = self.get_new_src_coordinates(src, points)
+            dst = np.array([[0, 0], [600, 0], [0, 600], [600, 600]])
+            # Transform
+            img_transformed = self.transform_image(img, src_new, dst)
+            # Detect points once more
+            transformed_gray = img_transformed[:,:,0] # Pick red channel only
+            points = self.get_grid(transformed_gray)
+            self.cells = self.get_cell_centers(points)
 
 
         (corners, ids, rejected) = cv2.aruco.detectMarkers(img, self.arucoDict,
@@ -258,7 +260,7 @@ class LamponeServerRobotController(Node):
                     # SEND MOVE LEFT
                     pass
                 elif current_move == "R":
-                    move_msg.twist.angular.z = -1
+                    move_msg.twist.angular.z = 1
                     # SEND MOVE RIGHT
                     pass
                 elif current_move == "F":
