@@ -39,10 +39,11 @@ class LamponeServerRobotController(Node):
         timer_period = 1  # seconds
         self.timer = self.create_timer(timer_period, self.run_callback)
         self.bridge = CvBridge()
-        self.arucoDict = cv2.aruco.Dictionary_get(cv2.aruco.DICT_6X6_50)
+        self.arucoDict = cv2.aruco.Dictionary_get(cv2.aruco.DICT_4X4_50)
         self.arucoId = 1
         self.arucoParams = cv2.aruco.DetectorParameters_create()
         self.cells = None
+        self.size = 10
 
 
     def transform_image(self, img, src, dst):
@@ -145,7 +146,7 @@ class LamponeServerRobotController(Node):
         u_vec = [topLeft[0] - bottomLeft[0], topLeft[1] - bottomLeft[1]]
         u_vec = np.array(u_vec / np.norm(u_vec))
         angle = np.arctan2(-u_vec[1], -u_vec[2]) # Je to -pi az pi. 0 kdyz je kod nahoru
-        return np.array([cX, cY, angle])
+        return np.array([cX, cY, angle, -u_vec[0], -u_vec[1]])
 
     def get_robot_position_in_grid(self, cells, robot_position, grid_size):
         min_dist = robot_position[0:2].copy()
@@ -156,7 +157,7 @@ class LamponeServerRobotController(Node):
             if np.norm([x,y]) < np.norm(min_dist):
                 min_dist = np.array([x,y])
                 pos = [i % grid_size, i // grid_size]
-        return np.array([pos[0], pos[1], robot_position[2]])
+        return np.array([pos[0], pos[1], robot_position[2], robot_position[3], robot_position[4]])
 
     def path_callback(self, data):
         self.path.append(data.data)
@@ -199,45 +200,49 @@ class LamponeServerRobotController(Node):
         for (markerCorner, markerID) in zip(corners, ids):
             if markerID == self.arucoId:
                 robot_position = self.get_robot_position_px(markerCorner)
-                robot_pos_grid = self.get_robot_position_in_grid(cells, robot_position)
+                robot_pos_grid = self.get_robot_position_in_grid(self.cells, robot_position)
         return robot_pos_grid
 
     def is_move_complete(self, last_state, current_state, move):
         state = current_state - last_state
-        if state[2] >= 180:
-            state[2] = 360 - state[2]
-        if state[2] <= -180:
-            state[2] = -360 - state[2]
+
+        last_vec = last_state[3:]
+        current_vec = current_state[3:]
+
+        angle = 180 * np.arccos(current_vec.dot(last_vec))/np.pi
+        if (current_state[2] - last_state[2]) < 0 or np.abs(last_state[2]- current_state[2]) > 180:
+            angle = -angle
+
         if move == "L":
-            if state[2] > 85 and state[2] < 95:
+            if angle  > 87 and angle < 93:
                 return True
         elif move == "R":
-            if state[2] > -95 and state[2] < -85:
-                return True            
+            if angle  > -93 and angle < -87:
+                return True       
         elif move == "F":
-            if (last_state[2] == 0):
+            if (last_state[2] > 355) or (last_state[2] < 5):
                 if state[0] == 1:
                     return True
-            elif (last_state[2] == 90):
+            elif (last_state[2] > 85) and (last_state[2] < 95):
                 if state[1] == 1:
                     return True
-            elif (last_state[2] == 180):
+            elif (last_state[2] > 175) or (last_state[2] < 185):
                 if state[0] == -1:
                     return True
-            elif (last_state[2] == 270):
+            elif (last_state[2] > 265) or (last_state[2] < 275):
                 if state[1] == -1:
                     return True
         elif move == "B":
-            if (last_state[2] == 0):
+            if (last_state[2] > 355) or (last_state[2] < 5):
                 if state[0] == -1:
                     return True
-            elif (last_state[2] == 90):
+            elif (last_state[2] > 85) and (last_state[2] < 95):
                 if state[1] == -1:
                     return True
-            elif (last_state[2] == 180):
+            elif (last_state[2] > 175) or (last_state[2] < 185):
                 if state[0] == 1:
                     return True
-            elif (last_state[2] == 270):
+            elif (last_state[2] > 265) or (last_state[2] < 275):
                 if state[1] == 1:
                     return True
             pass
@@ -249,6 +254,10 @@ class LamponeServerRobotController(Node):
         while len(path > 0):
             current_move = path.pop(0)
             last_state = self.get_robot_position()
+            if last_state[0] < 0 or last_state[1] < 0 or last_state[0] > self.size -1 or last_state[1] > self.size -1:
+                move_msg = TwistStamped()
+                self.twist_publisher.Publish(move_msg)
+                break
             while current_move is not None:
                 current_state = self.get_robot_position()
                 # Porovnat current a last state zda doslo ke správnému posunu.
