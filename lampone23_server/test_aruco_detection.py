@@ -49,7 +49,7 @@ while True:
     else:
         print("None")
     #cv2.imwrite("test.png", gray)
-    break
+
 # When everything done, release the capture
 cap.release()
 
