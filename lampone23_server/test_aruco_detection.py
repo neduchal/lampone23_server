@@ -46,7 +46,9 @@ while True:
                 u_vec = [topLeft[0] - bottomLeft[0], topLeft[1] - bottomLeft[1]]
                 u_vec = np.array(u_vec / np.linalg.norm(u_vec))
                 angle = np.arctan2(-u_vec[0], -u_vec[1])
-                angle = 180 * angle/np.pi # Je to -pi az pi . zkontrolovat zda s tim pocita i zbytek kodu          
+                angle = 180 * angle/np.pi # Je to -pi az pi . zkontrolovat zda s tim pocita i zbytek kodu  
+                if angle < 0:
+                    angle = 360 - angle        
                 print (i, cX, cY, angle)
     else:
         print(str(i)+" None")
