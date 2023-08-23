@@ -45,9 +45,9 @@ while True:
                 u_vec = [topLeft[0] - bottomLeft[0], topLeft[1] - bottomLeft[1]]
                 u_vec = np.array(u_vec / np.linalg.norm(u_vec))
                 angle = np.arctan2(u_vec[0], u_vec[1]) # Je to -pi az pi . zkontrolovat zda s tim pocita i zbytek kodu          
-                print (cX, cY, angle)
+                print (i, cX, cY, angle)
     else:
-        print("None")
+        print(str(i)+" None")
     #cv2.imwrite("test.png", gray)
 
 # When everything done, release the capture
