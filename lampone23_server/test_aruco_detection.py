@@ -48,7 +48,7 @@ while True:
                 angle = np.arctan2(-u_vec[0], -u_vec[1])
                 angle = 180 * angle/np.pi # Je to -pi az pi . zkontrolovat zda s tim pocita i zbytek kodu  
                 if angle < 0:
-                    angle = 360 - angle        
+                    angle = angle + 360
                 print (i, cX, cY, angle)
     else:
         print(str(i)+" None")
