@@ -142,9 +142,9 @@ class LamponeServerRobotController(Node):
 
         cX = int((topLeft[0] + bottomRight[0]) / 2.0)
         cY = int((topLeft[1] + bottomRight[1]) / 2.0)
-        u_vec = [bottomLeft[0] - bottomRight[0], bottomLeft[1] - bottomRight[1]]
+        u_vec = [topLeft[0] - bottomLeft[0], topLeft[1] - bottomLeft[1]]
         u_vec = np.array(u_vec / np.norm(u_vec))
-        angle = np.arctan2(u_vec[1], u_vec[2]) # Je to -pi az pi . zkontrolovat zda s tim pocita i zbytek kodu
+        angle = np.arctan2(-u_vec[1], -u_vec[2]) # Je to -pi az pi . zkontrolovat zda s tim pocita i zbytek kodu
         return np.array([cX, cY, angle])
 
     def get_robot_position_in_grid(self, cells, robot_position, grid_size):
