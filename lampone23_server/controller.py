@@ -4,7 +4,7 @@ from rclpy.node import Node
 import cv2
 import cv2.aruco
 from cv_bridge import CvBridge 
-from geometry_msgs.msg import TwistStamped
+from geometry_msgs.msg import Twist
 from sensor_msgs.msg import Image
 from std_msgs.msg import Empty, String # For trigger message
 import numpy as np
@@ -15,6 +15,7 @@ from skimage import transform as tf
 class LamponeServerRobotController(Node):
 
     def __init__(self):
+        super().__init__('lampone_server_robot_controller')
         self.solution_subscriber = self.create_subscription(
             String,
             '/lampone23/path',
@@ -33,7 +34,7 @@ class LamponeServerRobotController(Node):
             self.trigger_callback,
             10)
         self.trigger_subscriber
-        self.twist_publisher = self.create_publisher(TwistStamped, "cmd_vel", 10)
+        self.twist_publisher = self.create_publisher(Twist, "cmd_vel", 10)
         self.image = None
         self.path = []
         timer_period = 1  # seconds
@@ -148,15 +149,17 @@ class LamponeServerRobotController(Node):
         angle = np.arctan2(-u_vec[1], -u_vec[2]) # Je to -pi az pi. 0 kdyz je kod nahoru
         return np.array([cX, cY, angle, -u_vec[0], -u_vec[1]])
 
-    def get_robot_position_in_grid(self, cells, robot_position, grid_size):
+    def get_robot_position_in_grid(self, cells, robot_position, grid_size, last_position):
         min_dist = robot_position[0:2].copy()
         pos = [-1,-1]
         for i, cell in enumerate(cells):
             x = robot_position[0] - cell[0]
             y = robot_position[1] - cell[1]
-            if np.norm([x,y]) < np.norm(min_dist):
+            if np.norm([x,y]) < np.norm(min_dist) and np.norm([x,y]) < 50:
                 min_dist = np.array([x,y])
                 pos = [i % grid_size, i // grid_size]
+        if pos[0] == -1 and pos[1] == -1:
+            pos = last_position 
         return np.array([pos[0], pos[1], robot_position[2], robot_position[3], robot_position[4]])
 
     def path_callback(self, data):
@@ -167,7 +170,7 @@ class LamponeServerRobotController(Node):
         self.image = self.bridge.imgmsg_to_cv2(data)
         pass
 
-    def get_robot_position(self):
+    def get_robot_position(self, last_position):
         """
             Vraci pozici robota X,Y v ramci mrizky a jeho natoceni na zaklade cteni ARUCO tagu.
         """
@@ -200,7 +203,7 @@ class LamponeServerRobotController(Node):
         for (markerCorner, markerID) in zip(corners, ids):
             if markerID == self.arucoId:
                 robot_position = self.get_robot_position_px(markerCorner)
-                robot_pos_grid = self.get_robot_position_in_grid(self.cells, robot_position)
+                robot_pos_grid = self.get_robot_position_in_grid(self.cells, robot_position, last_position)
         return robot_pos_grid
 
     def is_move_complete(self, last_state, current_state, move):
@@ -253,39 +256,60 @@ class LamponeServerRobotController(Node):
     def process_path(self, path):
         while len(path > 0):
             current_move = path.pop(0)
-            last_state = self.get_robot_position()
+            last_state = self.get_robot_position([-1, -1])
             if last_state[0] < 0 or last_state[1] < 0 or last_state[0] > self.size -1 or last_state[1] > self.size -1:
-                move_msg = TwistStamped()
+                move_msg = Twist()
                 self.twist_publisher.Publish(move_msg)
                 break
             while current_move is not None:
-                current_state = self.get_robot_position()
+                current_state = self.get_robot_position(last_state[0:2])
                 # Porovnat current a last state zda doslo ke správnému posunu.
                 if self.is_move_complete(last_state=last_state, current_state=current_state, move=current_move):
                     break
-                move_msg = TwistStamped()
+                move_msg = Twist()
                 if current_move == "L":
-                    move_msg.twist.angular.z = -1
-                    # SEND MOVE LEFT
-                    pass
+                    move_msg.angular.z = -1
                 elif current_move == "R":
-                    move_msg.twist.angular.z = 1
-                    # SEND MOVE RIGHT
-                    pass
+                    move_msg.angular.z = 1
                 elif current_move == "F":
-                    move_msg.twist.linear.x = 1
-                    # SEND MOVE FORWARD
-                    pass
+                    move_msg.linear.x = 1
+                    last_angle = last_state[2]
+                    current_angle = current_state[2]
+                    diff = 0
+                    if last_angle > 350 or last_angle < 10:
+                        pass
+                    elif last_angle > 80 and last_angle < 100:
+                        diff = 90 - current_angle
+                    elif last_angle > 170 and last_angle < 190:
+                        diff = 180 - current_angle
+                    elif last_angle > 260 and last_angle < 280:
+                        diff = 270 - current_angle
+                    if diff > 3:
+                        move_msg.angular.z = 0.1
+                    elif diff < 3:
+                        move_msg.angular.z = -0.1
                 elif current_move == "B":
-                    move_msg.twist.linear.x = -1
-                    # SEND MOVE BACK
-                    pass
+                    move_msg.linear.x = -1
+                    if last_angle > 350 or last_angle < 10:
+                        pass
+                    elif last_angle > 80 and last_angle < 100:
+                        diff = 90 - current_angle
+                    elif last_angle > 170 and last_angle < 190:
+                        diff = 180 - current_angle
+                    elif last_angle > 260 and last_angle < 280:
+                        diff = 270 - current_angle
+                    if diff > 3:
+                        move_msg.angular.z = -0.1
+                    elif diff < 3:
+                        move_msg.angular.z = 0.1                    
                 else:
                     # DO NOTHING
                     pass
                 self.twist_publisher.Publish(move_msg)
-                
-            pass
+            # Poslani zpravy na zastaveni
+            move_msg = TwistStamped()
+            self.twist_publisher.Publish(move_msg)                
+
 
     def run_callback(self):
         if len(self.path) > 0  and self.image is not None and self.trigger is not None:
