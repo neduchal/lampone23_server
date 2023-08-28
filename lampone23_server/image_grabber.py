@@ -37,7 +37,7 @@ class ImageGrabber(Node):
                 print("Can't receive frame (stream end?). Exiting ...")
                 break
             self.image = frame
-            self.image_publisher.Publish(self.bridge.cv2_to_imgmsg(frame, "bgr8"))
+            self.image_publisher.publish(self.bridge.cv2_to_imgmsg(frame, "bgr8"))
 
     def image_saver_callback(self):
         if self.image is not None:
