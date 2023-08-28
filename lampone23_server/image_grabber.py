@@ -45,14 +45,16 @@ class ImageGrabber(Node):
 def main(args=None):
     rclpy.init(args=args)
 
-    controller = ImageGrabber()
+    grabber = ImageGrabber()
 
-    rclpy.spin(controller)
+    grabber.run()
+
+    rclpy.spin(grabber)
 
     # Destroy the node explicitly
     # (optional - otherwise it will be done automatically
     # when the garbage collector destroys the node object)
-    controller.destroy_node()
+    grabber.destroy_node()
     rclpy.shutdown()
 
 
