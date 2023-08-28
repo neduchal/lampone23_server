@@ -8,9 +8,9 @@ from geometry_msgs.msg import TwistStamped
 from sensor_msgs.msg import Image
 from std_msgs.msg import Empty, String # For trigger message
 import numpy as np
-import scipy
-import skimage
-from skimage import transform as tf
+#import scipy
+#import skimage
+#from skimage import transform as tf
 
 
 class ImageGrabber(Node):
