@@ -24,7 +24,7 @@ setup(
     entry_points={
         'console_scripts': [
             'server = lampone23_server.server:main',
-            'processer = lampone23_server.processer:main',
+            'image_grabber = lampone23_server.image_grabber:main',
             'controller = lampone23_server.controller:main'            
         ],
     },
