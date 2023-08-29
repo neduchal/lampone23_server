@@ -49,9 +49,9 @@ def get_grid(img):
     cv2.imwrite("/var/www/html/image/norm.jpg",normalized*255)
 
     # Creating kernel with pattern
-    kernel = np.ones((25,25))
-    kernel[5:-5,:] = 0
-    kernel[:,5:-5] = 0
+    kernel = np.ones((50,50))
+    kernel[10:-10,:] = 0
+    kernel[:,10:-10] = 0
     print('Kernel:')
     print(kernel)
 
