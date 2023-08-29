@@ -82,7 +82,15 @@ image = frame[260:761, 652:1328, :]
 cv2.imwrite("/var/www/html/image/test.jpg", image)
 
 img_gray = cv2.cvtColor(image[:,:,:3], cv2.COLOR_BGR2GRAY)
-points = get_grid(img_gray)
+#points = get_grid(img_gray)
+
+arr = [75, 55, 445, 595]
+
+points = []
+
+for i in range(8):
+    for j in range(8):
+        points.append([55 + i * (445-55), 75 + j * (595 - 75)])
 
 image2 = image.copy()
 
