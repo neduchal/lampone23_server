@@ -56,6 +56,8 @@ def get_grid(img):
 
     # Finding the local maximums
     points = nms(convolution_output)
+    cv2.imwrite("/var/www/html/image/points.jpg",points * 255)
+
     
     print('Number of detected points:')
     print(np.sum(points))
