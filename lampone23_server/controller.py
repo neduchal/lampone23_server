@@ -9,9 +9,7 @@ from sensor_msgs.msg import Image
 from std_msgs.msg import Empty, String # For trigger message
 import numpy as np
 import time
-#import scipy
-#import skimage
-#from skimage import transform as tf
+
 
 class LamponeServerRobotController(Node):
 
@@ -38,8 +36,6 @@ class LamponeServerRobotController(Node):
         self.twist_publisher = self.create_publisher(Twist, "cmd_vel", 10)
         self.image = None
         self.path = []
-        timer_period = 1  # seconds
-        #self.timer = self.create_timer(timer_period, self.run_callback)
         self.bridge = CvBridge()
         self.arucoDict = cv2.aruco.Dictionary_get(cv2.aruco.DICT_4X4_50)
         self.arucoId = 1
@@ -51,91 +47,6 @@ class LamponeServerRobotController(Node):
         self.size = 10
         self.current_time = time.time()
 
-    """
-    def transform_image(self, img, src, dst):
-        tform3 = tf.ProjectiveTransform()
-        tform3.estimate(dst, src)
-        warped = tf.warp(img, tform3, output_shape=tuple(np.max(dst, axis=0)))
-        return warped
-
-    def normalize_img(self, img, mask_size=5):
-        # Create a mask with blured image with the same value range
-        mask =scipy.signal.convolve2d(img, np.ones((mask_size,mask_size))/(mask_size**2),mode='same',boundary='symm')
-
-        # Substract and normalize to <0,1> range
-        normalized = img-mask+0.5
-        return normalized
-
-    def nms(self, input, neighborhood_size=40):
-        # Add padding with size equal to neighborhood size (so we dont lose information from the image edges)
-        padding = neighborhood_size
-        img_padded = np.pad(input, padding)
-
-        # Prepare the result array
-        result = np.zeros(input.shape)
-
-        # Iterate through the image
-        for i in range(input.shape[0]):
-            i_ = i+padding
-            for j in range(input.shape[1]):
-                j_ = j+padding
-
-            # Find maximum in the neighborhood
-            max_val = np.max(img_padded[i_-neighborhood_size:i_+neighborhood_size,j_-neighborhood_size:j_+neighborhood_size])
-
-            # Make the output array
-            if max_val == img_padded[i_,j_]:
-                result[i,j] = 1
-        return result.T
-
-    def get_grid(self, img):
-        # Normalize image
-        normalized = self.normalize_img(img)
-
-        # Creating kernel with pattern
-        kernel = np.ones((9,9))
-        kernel[3:-3,:] = 0
-        kernel[:,3:-3] = 0
-        print('Kernel:')
-        print(kernel)
-
-        # Convolution with kernel
-        convolution_output =scipy.signal.convolve2d(normalized, kernel, mode='same')
-
-        # Finding the local maximums
-        points = self.nms(convolution_output)
-        
-        print('Number of detected points:')
-        print(np.sum(points))
-
-        return np.where(points)
-
-    # Find Corners of grid
-    def get_new_src_coordinates(self, src, points, n_in_row=9, offset=20):
-        points_min = np.min(points, axis=1)-offset
-        points_max = np.max(points, axis=1)+offset
-        src_new = np.array([points_min, [points_max[0], points_min[1]], [points_min[0], points_max[1]], points_max])
-        return src_new
-
-    def get_cell_centers(self, points, n_in_row=9):
-        cells=[[],[]]
-        points_coords = sorted(np.array(points).T.tolist(), key=lambda x: x[0])
-        for i in range(n_in_row-1):
-            for j in range(n_in_row-1):
-                # Get first row
-                row1 = points_coords[i*9:(i+1)*9]
-                # Get first two elements from first row
-                col1 = sorted(row1, key=lambda x: x[1])[j:2+j]
-                # Get second row
-                row2 = points_coords[9*(i+1):(i+2)*9]
-                # Get first two elements from second row
-                col2 = sorted(row2, key=lambda x: x[1])[j:2+j]
-                corners = np.array(col1+col2).T
-                y,x = np.mean(corners,axis=1)
-                cells[0].append(x)
-                cells[1].append(y)
-        return cells
-    """
     def get_robot_position_px(self, markerCorner):
         # extract the marker corners (which are always returned in
         # top-left, top-right, bottom-right, and bottom-left order)
@@ -158,11 +69,11 @@ class LamponeServerRobotController(Node):
         min_dist = robot_position[0:2].copy()
         pos = [-1,-1]
         for i, cell in enumerate(cells):
-            x = robot_position[0] - cell[0]
-            y = robot_position[1] - cell[1]
+            x = robot_position[0] - cell[2]
+            y = robot_position[1] - cell[3]
             if np.norm([x,y]) < np.norm(min_dist) and np.norm([x,y]) < 50:
                 min_dist = np.array([x,y])
-                pos = [i % grid_size, i // grid_size]
+                pos = [cell[0], cell[1]]
         if pos[0] == -1 and pos[1] == -1:
             pos = last_position 
         return np.array([pos[0], pos[1], robot_position[2], robot_position[3], robot_position[4]])
@@ -180,25 +91,6 @@ class LamponeServerRobotController(Node):
             Vraci pozici robota X,Y v ramci mrizky a jeho natoceni na zaklade cteni ARUCO tagu.
         """
         img = self.image.copy()
-
-        # Tento blok p;jde vyhledem ke statické kameře zavolat jenom jednou.
-        # Předělat na service, který v případě, že už bude provedeno pouze vrátí hodnoty.
-        # Tím se vše výrazně urychlí
-        """
-        if self.cells == None:
-            img_gray = skimage.color.rgb2gray(img[:,:,:3])
-            points = self.get_grid(img_gray)
-            # Select corners of grid
-            src = np.array([[900,350], [3200, 350], [900, 2650], [3200, 2650]])
-            src_new = self.get_new_src_coordinates(src, points)
-            dst = np.array([[0, 0], [600, 0], [0, 600], [600, 600]])
-            # Transform
-            img_transformed = self.transform_image(img, src_new, dst)
-            # Detect points once more
-            transformed_gray = img_transformed[:,:,0] # Pick red channel only
-            points = self.get_grid(transformed_gray)
-            self.cells = self.get_cell_centers(points)
-        """
 
         (corners, ids, rejected) = cv2.aruco.detectMarkers(img, self.arucoDict,
             parameters=self.arucoParams)
