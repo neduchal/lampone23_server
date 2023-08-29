@@ -8,6 +8,7 @@ def normalize_img(img, mask_size=5):
     #mask = mask  
     #print(np.max(mask))
     mask = cv2.filter2D(img, -1, np.ones((mask_size,mask_size))/(mask_size**2), borderType=cv2.BORDER_CONSTANT)
+    mask = mask / np.max(mask)
     print(np.max(mask))
     # Create a mask with blured image with the same value range
     #mask =scipy.signal.convolve2d(img, np.ones((mask_size,mask_size))/(mask_size**2),mode='same',boundary='symm')
