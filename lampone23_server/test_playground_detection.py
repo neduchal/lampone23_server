@@ -37,6 +37,7 @@ def nms(input, neighborhood_size=40):
 def get_grid(img):
     # Normalize image
     normalized = normalize_img(img)
+    cv2.imwrite("/var/www/html/image/norm.jpg", normalized)
 
     # Creating kernel with pattern
     kernel = np.ones((9,9))
