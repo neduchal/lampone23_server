@@ -18,3 +18,5 @@ while True:
     cv2.imwrite("/var/www/html/image/test.png")
 
     # orez
+
+    break
