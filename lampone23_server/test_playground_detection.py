@@ -72,6 +72,6 @@ points = get_grid(img_gray)
 image2 = image.copy()
 
 for point in points:
-    image2 = cv2.circle(image2, point, 5, (0,255,0), 3)
+    image2 = cv2.circle(image2, (point[0], point[1]), 5, (0,255,0), 3)
 
 cv2.imwrite("/var/www/html/image/corners.jpg", image)
