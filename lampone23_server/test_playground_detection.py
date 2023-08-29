@@ -13,7 +13,7 @@ def normalize_img(img, mask_size=5):
 
     # Substract and normalize to <0,1> range
     #normalized = img-mask+0.5
-    return normalized
+    return mask
 
 def nms(input, neighborhood_size=40):
     # Add padding with size equal to neighborhood size (so we dont lose information from the image edges)
