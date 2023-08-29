@@ -8,9 +8,9 @@ from geometry_msgs.msg import Twist
 from sensor_msgs.msg import Image
 from std_msgs.msg import Empty, String # For trigger message
 import numpy as np
-import scipy
-import skimage
-from skimage import transform as tf
+#import scipy
+#import skimage
+#from skimage import transform as tf
 
 class LamponeServerRobotController(Node):
 
@@ -43,10 +43,13 @@ class LamponeServerRobotController(Node):
         self.arucoDict = cv2.aruco.Dictionary_get(cv2.aruco.DICT_4X4_50)
         self.arucoId = 1
         self.arucoParams = cv2.aruco.DetectorParameters_create()
-        self.cells = None
+        self.cells = []
+        for i in range(8):
+            for j in range(8):
+                self.cells.append([i, j, int(55 + i/7 * (445-55)), int(75 + j/7 * (595 - 75))])
         self.size = 10
 
-
+    """
     def transform_image(self, img, src, dst):
         tform3 = tf.ProjectiveTransform()
         tform3.estimate(dst, src)
@@ -130,7 +133,7 @@ class LamponeServerRobotController(Node):
                 cells[0].append(x)
                 cells[1].append(y)
         return cells
-
+    """
     def get_robot_position_px(self, markerCorner):
         # extract the marker corners (which are always returned in
         # top-left, top-right, bottom-right, and bottom-left order)
@@ -179,6 +182,7 @@ class LamponeServerRobotController(Node):
         # Tento blok p;jde vyhledem ke statické kameře zavolat jenom jednou.
         # Předělat na service, který v případě, že už bude provedeno pouze vrátí hodnoty.
         # Tím se vše výrazně urychlí
+        """
         if self.cells == None:
             img_gray = skimage.color.rgb2gray(img[:,:,:3])
             points = self.get_grid(img_gray)
@@ -192,7 +196,7 @@ class LamponeServerRobotController(Node):
             transformed_gray = img_transformed[:,:,0] # Pick red channel only
             points = self.get_grid(transformed_gray)
             self.cells = self.get_cell_centers(points)
-
+        """
 
         (corners, ids, rejected) = cv2.aruco.detectMarkers(img, self.arucoDict,
             parameters=self.arucoParams)
@@ -307,7 +311,7 @@ class LamponeServerRobotController(Node):
                     pass
                 self.twist_publisher.Publish(move_msg)
             # Poslani zpravy na zastaveni
-            move_msg = TwistStamped()
+            move_msg = Twist()
             self.twist_publisher.Publish(move_msg)                
 
 
