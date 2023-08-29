@@ -3,12 +3,12 @@ import numpy as np
 
 
 def normalize_img(img, mask_size=5):
-    blur = cv2.GaussianBlur(img,(5,5),0)
-    ret3,mask = cv2.threshold(blur,0,1,cv2.THRESH_BINARY+cv2.THRESH_OTSU)
-    mask = mask  
+    #blur = cv2.GaussianBlur(img,(5,5),0)
+    #ret3,mask = cv2.threshold(img,0,1,cv2.THRESH_BINARY+cv2.THRESH_OTSU)
+    #mask = mask  
+    #print(np.max(mask))
+    mask = cv2.filter2D(img, -1, np.ones((mask_size,mask_size))/(mask_size**2), borderType=cv2.BORDER_CONSTANT)
     print(np.max(mask))
-    #mask = cv2.filter2D(img, -1, np.ones((mask_size,mask_size))/(mask_size**2), borderType=cv2.BORDER_CONSTANT)
-    
     # Create a mask with blured image with the same value range
     #mask =scipy.signal.convolve2d(img, np.ones((mask_size,mask_size))/(mask_size**2),mode='same',boundary='symm')
 
