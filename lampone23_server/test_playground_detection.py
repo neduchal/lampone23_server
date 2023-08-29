@@ -1,5 +1,7 @@
 import cv2
 import numpy as np
+import scipy
+import scipy.signal
 
 
 def normalize_img(img, mask_size=5):
@@ -7,11 +9,11 @@ def normalize_img(img, mask_size=5):
     #ret3,mask = cv2.threshold(img,0,1,cv2.THRESH_BINARY+cv2.THRESH_OTSU)
     #mask = mask  
     #print(np.max(mask))
-    mask = cv2.filter2D(img, -1, np.ones((mask_size,mask_size))/(mask_size**2), borderType=cv2.BORDER_CONSTANT)
-    mask = mask / np.max(mask)
-    print(np.max(mask))
+    #mask = cv2.filter2D(img, -1, np.ones((mask_size,mask_size))/(mask_size**2), borderType=cv2.BORDER_CONSTANT)
+    #mask = mask / np.max(mask)
+    #print(np.max(mask))
     # Create a mask with blured image with the same value range
-    #mask =scipy.signal.convolve2d(img, np.ones((mask_size,mask_size))/(mask_size**2),mode='same',boundary='symm')
+    mask =scipy.signal.convolve2d(img, np.ones((mask_size,mask_size))/(mask_size**2),mode='same',boundary='symm')
 
     # Substract and normalize to <0,1> range
     normalized = (img/np.max(img))-mask+0.5
@@ -52,8 +54,8 @@ def get_grid(img):
     print(kernel)
 
     # Convolution with kernel
-    convolution_output = cv2.filter2D(normalized, -1, kernel, borderType=cv2.BORDER_CONSTANT)
-    #convolution_output =scipy.signal.convolve2d(normalized, kernel, mode='same')
+    #convolution_output = cv2.filter2D(normalized, -1, kernel, borderType=cv2.BORDER_CONSTANT)
+    convolution_output =scipy.signal.convolve2d(normalized, kernel, mode='same')
 
     cv2.imwrite("/var/www/html/image/conv.jpg",convolution_output)
 
