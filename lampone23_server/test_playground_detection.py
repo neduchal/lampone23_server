@@ -57,9 +57,9 @@ def get_grid(img):
 
     # Convolution with kernel
     #convolution_output = cv2.filter2D(normalized, -1, kernel, borderType=cv2.BORDER_CONSTANT)
-    convolution_output =scipy.signal.convolve2d(normalized, kernel, mode='same')
+    convolution_output = scipy.signal.convolve2d(normalized, kernel, mode='same')
 
-    cv2.imwrite("/var/www/html/image/conv.jpg",convolution_output * 255)
+    cv2.imwrite("/var/www/html/image/conv.jpg",convolution_output)
 
     # Finding the local maximums
     points = nms(convolution_output)
