@@ -16,20 +16,20 @@ def generate_launch_description():
     return LaunchDescription([
         Node(
             package='lampone23_server',
-            namespace='lampone23',
-            executable='image_grabber',
-            name='lampone23_image_grabber'
+            node_namespace='lampone23',
+            node_executable='image_grabber',
+            node_name='lampone23_image_grabber'
         ),
        Node(
             package='lampone23_server',
-            namespace='lampone23',
-            executable='server',
-            name='lampone23_server'
+            node_namespace='lampone23',
+            node_executable='server',
+            node_name='lampone23_server'
         ),
        Node(
             package='lampone23_server',
-            namespace='lampone23',
-            executable='controller',
-            name='lampone23_controller'
+            node_namespace='lampone23',
+            node_executable='controller',
+            node_name='lampone23_controller'
         )        
     ])
