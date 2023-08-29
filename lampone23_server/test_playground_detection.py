@@ -1,22 +1,6 @@
 import cv2
 import numpy as np
 
-
-frame = cv2.imread("/var/www/html/image/image.png")
-
-
-image = frame[260:761, 652:1328, :]
-
-cv2.imwrite("/var/www/html/image/test.jpg", image)
-
-img_gray = cv2.cvtColor(image[:,:,:3], cv2.COLOR_BGR2GRAY)
-points = get_grid(img_gray)
-
-image2 = image.copy()
-
-for point in points:
-    image2 = cv2.circle(image2, point, 5, (0,255,0), 3)
-
 cv2.imwrite("/var/www/html/image/corners.jpg", image)
 
 
@@ -52,7 +36,7 @@ def nms(input, neighborhood_size=40):
             result[i,j] = 1
     return result.T
 
-def get_grid( img):
+def get_grid(img):
     # Normalize image
     normalized = normalize_img(img)
 
@@ -74,3 +58,20 @@ def get_grid( img):
     print(np.sum(points))
 
     return np.where(points)
+
+
+
+frame = cv2.imread("/var/www/html/image/image.png")
+
+
+image = frame[260:761, 652:1328, :]
+
+cv2.imwrite("/var/www/html/image/test.jpg", image)
+
+img_gray = cv2.cvtColor(image[:,:,:3], cv2.COLOR_BGR2GRAY)
+points = get_grid(img_gray)
+
+image2 = image.copy()
+
+for point in points:
+    image2 = cv2.circle(image2, point, 5, (0,255,0), 3)
