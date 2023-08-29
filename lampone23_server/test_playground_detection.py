@@ -4,7 +4,7 @@ import scipy
 import scipy.signal
 
 
-def normalize_img(img, mask_size=9):
+def normalize_img(img, mask_size=5):
     #blur = cv2.GaussianBlur(img,(5,5),0)
     #ret3,mask = cv2.threshold(img,0,1,cv2.THRESH_BINARY+cv2.THRESH_OTSU)
     #mask = mask  
