@@ -19,7 +19,7 @@ def normalize_img(img, mask_size=5):
     normalized = (img/np.max(img))-mask+0.5
     return normalized
 
-def nms(input, neighborhood_size=50):
+def nms(input, neighborhood_size=40):
     # Add padding with size equal to neighborhood size (so we dont lose information from the image edges)
     padding = neighborhood_size
     img_padded = np.pad(input, padding, mode="symmetric")
@@ -47,9 +47,9 @@ def get_grid(img):
     cv2.imwrite("/var/www/html/image/norm.jpg",normalized*255)
 
     # Creating kernel with pattern
-    kernel = np.ones((25,25))
-    kernel[5:-5,:] = 0
-    kernel[:,5:-5] = 0
+    kernel = np.ones((9,9))
+    kernel[3:-3,:] = 0
+    kernel[:,3:-3] = 0
     print('Kernel:')
     print(kernel)
 
@@ -57,11 +57,11 @@ def get_grid(img):
     #convolution_output = cv2.filter2D(normalized, -1, kernel, borderType=cv2.BORDER_CONSTANT)
     convolution_output =scipy.signal.convolve2d(normalized, kernel, mode='same')
 
-    cv2.imwrite("/var/www/html/image/conv.jpg",convolution_output)
+    cv2.imwrite("/var/www/html/image/conv.jpg",convolution_output * 255)
 
     # Finding the local maximums
     points = nms(convolution_output)
-    cv2.imwrite("/var/www/html/image/points.jpg",points * 255)
+    cv2.imwrite("/var/www/html/image/points.jpg",points)
 
     
     print('Number of detected points:')
