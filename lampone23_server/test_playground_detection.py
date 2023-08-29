@@ -14,8 +14,8 @@ def normalize_img(img, mask_size=5):
     #mask =scipy.signal.convolve2d(img, np.ones((mask_size,mask_size))/(mask_size**2),mode='same',boundary='symm')
 
     # Substract and normalize to <0,1> range
-    #normalized = img-mask+0.5
-    return mask
+    normalized = (img/np.max(img))-mask+0.5
+    return normalized
 
 def nms(input, neighborhood_size=50):
     # Add padding with size equal to neighborhood size (so we dont lose information from the image edges)
