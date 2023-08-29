@@ -40,6 +40,7 @@ def nms(input, neighborhood_size=40):
 def get_grid(img):
     # Normalize image
     normalized = normalize_img(img)
+    cv2.imwrite("/var/www/html/image/norm.jpg",normalized)
 
     # Creating kernel with pattern
     kernel = np.ones((9,9))
@@ -51,7 +52,6 @@ def get_grid(img):
     # Convolution with kernel
     convolution_output = cv2.filter2D(normalized, -1, kernel, borderType=cv2.BORDER_CONSTANT)
     #convolution_output =scipy.signal.convolve2d(normalized, kernel, mode='same')
-    cv2.imwrite("/var/www/html/image/norm.jpg", convolution_output)
 
 
     # Finding the local maximums
