@@ -10,7 +10,7 @@ image = frame[260:761, 652:1328, :]
 cv2.imwrite("/var/www/html/image/test.jpg", image)
 
 img_gray = cv2.cvtColor(image[:,:,:3], cv2.COLOR_BGR2GRAY)
-points = self.get_grid(img_gray)
+points = get_grid(img_gray)
 
 image2 = image.copy()
 
@@ -52,7 +52,7 @@ def nms(input, neighborhood_size=40):
             result[i,j] = 1
     return result.T
 
-def get_grid(self, img):
+def get_grid( img):
     # Normalize image
     normalized = normalize_img(img)
 
@@ -68,7 +68,7 @@ def get_grid(self, img):
     #convolution_output =scipy.signal.convolve2d(normalized, kernel, mode='same')
 
     # Finding the local maximums
-    points = self.nms(convolution_output)
+    points = nms(convolution_output)
     
     print('Number of detected points:')
     print(np.sum(points))
