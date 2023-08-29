@@ -4,7 +4,7 @@ import scipy
 import scipy.signal
 
 
-def normalize_img(img, mask_size=5):
+def normalize_img(img, mask_size=9):
     #blur = cv2.GaussianBlur(img,(5,5),0)
     #ret3,mask = cv2.threshold(img,0,1,cv2.THRESH_BINARY+cv2.THRESH_OTSU)
     #mask = mask  
@@ -49,9 +49,9 @@ def get_grid(img):
     cv2.imwrite("/var/www/html/image/norm.jpg",normalized*255)
 
     # Creating kernel with pattern
-    kernel = np.ones((25,25))
-    kernel[5:-5,:] = 0
-    kernel[:,5:-5] = 0
+    kernel = np.ones((9,9))
+    kernel[3:-3,:] = 0
+    kernel[:,3:-3] = 0
     print('Kernel:')
     print(kernel)
 
