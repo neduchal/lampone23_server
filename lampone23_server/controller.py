@@ -8,6 +8,7 @@ from geometry_msgs.msg import Twist
 from sensor_msgs.msg import Image
 from std_msgs.msg import Empty, String # For trigger message
 import numpy as np
+import time
 #import scipy
 #import skimage
 #from skimage import transform as tf
@@ -38,7 +39,7 @@ class LamponeServerRobotController(Node):
         self.image = None
         self.path = []
         timer_period = 1  # seconds
-        self.timer = self.create_timer(timer_period, self.run_callback)
+        #self.timer = self.create_timer(timer_period, self.run_callback)
         self.bridge = CvBridge()
         self.arucoDict = cv2.aruco.Dictionary_get(cv2.aruco.DICT_4X4_50)
         self.arucoId = 1
@@ -48,6 +49,7 @@ class LamponeServerRobotController(Node):
             for j in range(8):
                 self.cells.append([i, j, int(55 + i/7 * (445-55)), int(75 + j/7 * (595 - 75))])
         self.size = 10
+        self.current_time = time.time()
 
     """
     def transform_image(self, img, src, dst):
@@ -315,16 +317,22 @@ class LamponeServerRobotController(Node):
             self.twist_publisher.Publish(move_msg)                
 
 
-    def run_callback(self):
-        if len(self.path) > 0  and self.image is not None and self.trigger is not None:
-            self.process_path(self.path.pop(0))
-            self.trigger == None
-            pass
+    def run(self):
+        if time.time() > self.current_time + 1:
+            if len(self.path) > 0  and self.image is not None and self.trigger is not None:
+                self.process_path(self.path.pop(0))
+                self.trigger == None
+            self.current_time = time.time()
+        
+    def trigger_callback(self, msg):
+        self.trigger = True
 
 def main(args=None):
     rclpy.init(args=args)
 
     controller = LamponeServerRobotController()
+
+    controller.run()
 
     rclpy.spin(controller)
 
