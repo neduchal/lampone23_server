@@ -90,12 +90,12 @@ points = []
 
 for i in range(8):
     for j in range(8):
-        points.append([int(55 + i/7 * (445-55)), int(75 + j/7 * (595 - 75))])
+        points.append([i, j, int(55 + i/7 * (445-55)), int(75 + j/7 * (595 - 75))])
 
 image2 = image.copy()
 
 for point in points:
     print(point)
-    image2 = cv2.circle(image2, (int(point[1]), int(point[0])), 5, (0,255,0), 3)
+    image2 = cv2.circle(image2, (int(point[3]), int(point[2])), 5, (0,255,0), 3)
 
 cv2.imwrite("/var/www/html/image/corners.jpg", image2)
