@@ -6,14 +6,13 @@ import scipy.signal
 
 def normalize_img(img, mask_size=5):
     #blur = cv2.GaussianBlur(img,(5,5),0)
-    #ret3,mask = cv2.threshold(img,0,1,cv2.THRESH_BINARY+cv2.THRESH_OTSU)
+    ret3,th = cv2.threshold(img,0,1,cv2.THRESH_BINARY+cv2.THRESH_OTSU)
     #mask = mask  
     #print(np.max(mask))
     #mask = cv2.filter2D(img, -1, np.ones((mask_size,mask_size))/(mask_size**2), borderType=cv2.BORDER_CONSTANT)
     #mask = mask / np.max(mask)
     #print(np.max(mask))
-    equ = cv2.equalizeHist(img)
-    img2 = img/np.max(equ)
+    img2 = th/np.max(th)
     # Create a mask with blured image with the same value range
     mask =scipy.signal.convolve2d(img2, np.ones((mask_size,mask_size))/(mask_size**2),mode='same',boundary='symm')
 
@@ -64,6 +63,7 @@ def get_grid(img):
 
     # Finding the local maximums
     points = nms(convolution_output)
+
     cv2.imwrite("/var/www/html/image/points.jpg",points)
 
     
