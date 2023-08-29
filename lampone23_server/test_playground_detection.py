@@ -1,8 +1,6 @@
 import cv2
 import numpy as np
 
-cv2.imwrite("/var/www/html/image/corners.jpg", image)
-
 
 def normalize_img(img, mask_size=5):
     mask = cv2.filter2D(img, -1, np.ones((mask_size,mask_size))/(mask_size**2), borderType=cv2.BORDER_CONSTANT)
@@ -75,3 +73,5 @@ image2 = image.copy()
 
 for point in points:
     image2 = cv2.circle(image2, point, 5, (0,255,0), 3)
+
+cv2.imwrite("/var/www/html/image/corners.jpg", image)
