@@ -12,11 +12,12 @@ def normalize_img(img, mask_size=5):
     #mask = cv2.filter2D(img, -1, np.ones((mask_size,mask_size))/(mask_size**2), borderType=cv2.BORDER_CONSTANT)
     #mask = mask / np.max(mask)
     #print(np.max(mask))
+    img2 = img/np.max(img)
     # Create a mask with blured image with the same value range
-    mask =scipy.signal.convolve2d(img, np.ones((mask_size,mask_size))/(mask_size**2),mode='same',boundary='symm')
+    mask =scipy.signal.convolve2d(img2, np.ones((mask_size,mask_size))/(mask_size**2),mode='same',boundary='symm')
 
     # Substract and normalize to <0,1> range
-    normalized = (img/np.max(img))-mask+0.5
+    normalized = img2-mask+0.5
     return normalized
 
 def nms(input, neighborhood_size=40):
