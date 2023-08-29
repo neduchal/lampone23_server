@@ -15,7 +15,7 @@ def normalize_img(img, mask_size=5):
 def nms(input, neighborhood_size=40):
     # Add padding with size equal to neighborhood size (so we dont lose information from the image edges)
     padding = neighborhood_size
-    img_padded = np.pad(input, padding)
+    img_padded = np.pad(input, padding, mode="symmetric")
 
     # Prepare the result array
     result = np.zeros(input.shape)
