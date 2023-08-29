@@ -4,7 +4,7 @@ import numpy as np
 
 def normalize_img(img, mask_size=5):
     blur = cv2.GaussianBlur(img,(5,5),0)
-    ret3,mask = cv2.threshold(img,0,255,cv2.THRESH_BINARY+cv2.THRESH_OTSU)
+    ret3,mask = cv2.threshold(img,0,150,cv2.THRESH_BINARY+cv2.THRESH_OTSU)
     mask = mask * 255    
     #mask = cv2.filter2D(img, -1, np.ones((mask_size,mask_size))/(mask_size**2), borderType=cv2.BORDER_CONSTANT)
     
