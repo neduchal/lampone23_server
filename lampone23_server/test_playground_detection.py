@@ -16,7 +16,7 @@ def normalize_img(img, mask_size=5):
     #normalized = img-mask+0.5
     return mask
 
-def nms(input, neighborhood_size=20):
+def nms(input, neighborhood_size=50):
     # Add padding with size equal to neighborhood size (so we dont lose information from the image edges)
     padding = neighborhood_size
     img_padded = np.pad(input, padding, mode="symmetric")
@@ -45,8 +45,8 @@ def get_grid(img):
 
     # Creating kernel with pattern
     kernel = np.ones((25,25))
-    kernel[5:-5,:] = 0
-    kernel[:,5:-5] = 0
+    kernel[4:-4,:] = 0
+    kernel[:,4:-4] = 0
     print('Kernel:')
     print(kernel)
 
