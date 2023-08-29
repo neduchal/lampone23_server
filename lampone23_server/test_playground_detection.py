@@ -50,8 +50,8 @@ def get_grid(img):
 
     # Creating kernel with pattern
     kernel = np.ones((50,50))
-    kernel[10:-10,:] = 0
-    kernel[:,10:-10] = 0
+    kernel[15:-15,:] = 0
+    kernel[:,15:-15] = 0
     print('Kernel:')
     print(kernel)
 
