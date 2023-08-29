@@ -15,7 +15,7 @@ while True:
 
     image = frame[260:761, 652:1328, :]
 
-    cv2.imwrite("/var/www/html/image/test.png")
+    cv2.imwrite("/var/www/html/image/test.png", image)
 
     # orez
 
