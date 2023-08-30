@@ -109,7 +109,6 @@ class LamponeServerRobotController(Node):
             if markerID == self.arucoId:
                 robot_position = self.get_robot_position_px(markerCorner)
                 robot_pos_grid = self.get_robot_position_in_grid(self.cells, robot_position, last_position)
-                print(robot_pos_grid)
         return robot_pos_grid
 
     def is_move_complete(self, last_state, current_state, move):
@@ -167,11 +166,13 @@ class LamponeServerRobotController(Node):
             if last_state[0] < 0 or last_state[1] < 0 or last_state[0] > self.size -1 or last_state[1] > self.size -1:
                 move_msg = Twist()
                 self.twist_publisher.publish(move_msg)
+                print("neni dobre")
                 break
             while current_move is not None:
                 current_state = self.get_robot_position(last_state[0:2])
                 # Porovnat current a last state zda doslo ke správnému posunu.
                 if self.is_move_complete(last_state=last_state, current_state=current_state, move=current_move):
+                    print("ouha")
                     break
                 move_msg = Twist()
                 if current_move == "L":
@@ -212,6 +213,7 @@ class LamponeServerRobotController(Node):
                 else:
                     # DO NOTHING
                     pass
+
                 self.twist_publisher.publish(move_msg)
             # Poslani zpravy na zastaveni
             move_msg = Twist()
