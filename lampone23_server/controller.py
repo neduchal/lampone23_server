@@ -162,7 +162,7 @@ class LamponeServerRobotController(Node):
             last_state = self.get_robot_position([-1, -1])
             if last_state[0] < 0 or last_state[1] < 0 or last_state[0] > self.size -1 or last_state[1] > self.size -1:
                 move_msg = Twist()
-                self.twist_publisher.Publish(move_msg)
+                self.twist_publisher.publish(move_msg)
                 break
             while current_move is not None:
                 current_state = self.get_robot_position(last_state[0:2])
@@ -208,10 +208,10 @@ class LamponeServerRobotController(Node):
                 else:
                     # DO NOTHING
                     pass
-                self.twist_publisher.Publish(move_msg)
+                self.twist_publisher.publish(move_msg)
             # Poslani zpravy na zastaveni
             move_msg = Twist()
-            self.twist_publisher.Publish(move_msg)                
+            self.twist_publisher.publish(move_msg)                
 
 
     def run_callback(self):
