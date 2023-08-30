@@ -183,9 +183,9 @@ class LamponeServerRobotController(Node):
                     break
                 move_msg = Twist()
                 if current_move == "L":
-                    move_msg.angular.z = -0.97
+                    move_msg.angular.z = -0.98
                 elif current_move == "R":
-                    move_msg.angular.z = 0.97
+                    move_msg.angular.z = 0.98
                 elif current_move == "F":
                     move_msg.linear.x = 1.09
                     """
@@ -225,7 +225,7 @@ class LamponeServerRobotController(Node):
                     # DO NOTHING
                     pass
                 #print(move_msg)
-                if time.time() > last_time + 0.1:
+                if time.time() > last_time + 0.05:
                     last_time = time.time()
                     self.twist_publisher.publish(move_msg)
             # Poslani zpravy na zastaveni
