@@ -109,7 +109,7 @@ class LamponeServerRobotController(Node):
             if markerID == self.arucoId:
                 robot_position = self.get_robot_position_px(markerCorner)
                 robot_pos_grid = self.get_robot_position_in_grid(self.cells, robot_position, last_position)
-                print(robot_position_grid)
+                print(robot_pos_grid)
         return robot_pos_grid
 
     def is_move_complete(self, last_state, current_state, move):
