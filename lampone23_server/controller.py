@@ -75,7 +75,7 @@ class LamponeServerRobotController(Node):
             x = robot_position[0] - cell[3]
             y = robot_position[1] - cell[2]
             #print(x, y, robot_position[0:2])
-            if np.linalg.norm([x,y]) < np.linalg.norm(min_dist) and np.linalg.norm([x,y]) < 50:
+            if np.linalg.norm([x,y]) < np.linalg.norm(min_dist):
                 min_dist = np.array([x,y])
                 pos = [cell[0], cell[1]]
         if pos[0] == -1 and pos[1] == -1:
@@ -101,7 +101,7 @@ class LamponeServerRobotController(Node):
             parameters=self.arucoParams)
         # verify *at least* one ArUco marker was detected
         robot_pos_grid = None
-        print(corners)
+        #print(corners)
         if len(corners) > 0:
             # flatten the ArUco IDs list
             ids = ids.flatten()            
@@ -109,6 +109,7 @@ class LamponeServerRobotController(Node):
             if markerID == self.arucoId:
                 robot_position = self.get_robot_position_px(markerCorner)
                 robot_pos_grid = self.get_robot_position_in_grid(self.cells, robot_position, last_position)
+                print(robot_position_grid)
         return robot_pos_grid
 
     def is_move_complete(self, last_state, current_state, move):
