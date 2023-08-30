@@ -165,7 +165,6 @@ class LamponeServerRobotController(Node):
             if last_state[0] < 0 or last_state[1] < 0 or last_state[0] > self.size -1 or last_state[1] > self.size -1:
                 move_msg = Twist()
                 self.twist_publisher.publish(move_msg)
-                print("neni dobre")
                 break
             while current_move is not None:
                 current_state = self.get_robot_position(last_state[0:2])
@@ -173,8 +172,9 @@ class LamponeServerRobotController(Node):
                 if self.is_move_complete(last_state=last_state, current_state=current_state, move=current_move):
                     print("ouha")
                     break
-                print("Jsme tu")
+                print("Jsme tu", current_move)
                 move_msg = Twist()
+
                 if current_move == "L":
                     move_msg.angular.z = -1.0
                 elif current_move == "R":
@@ -194,7 +194,7 @@ class LamponeServerRobotController(Node):
                         diff = 270 - current_angle
                     if diff > 3:
                         move_msg.angular.z = 0.1
-                    elif diff < 3:
+                    elif diff < -3:
                         move_msg.angular.z = -0.1
                 elif current_move == "B":
                     move_msg.linear.x = -1.0
@@ -213,7 +213,7 @@ class LamponeServerRobotController(Node):
                 else:
                     # DO NOTHING
                     pass
-
+                print(move_msg)
                 self.twist_publisher.publish(move_msg)
             # Poslani zpravy na zastaveni
             move_msg = Twist()
