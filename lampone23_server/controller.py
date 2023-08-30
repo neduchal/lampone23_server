@@ -116,6 +116,7 @@ class LamponeServerRobotController(Node):
 
         last_vec = last_state[3:]
         current_vec = current_state[3:]
+        print(last_vec, current_vec)
 
         angle = 180 * np.arccos(current_vec.dot(last_vec))/np.pi
         if (current_state[2] - last_state[2]) < 0 or np.abs(last_state[2]- current_state[2]) > 180:
@@ -160,9 +161,7 @@ class LamponeServerRobotController(Node):
 
     def process_path(self, path):
         for current_move in path:
-            print(current_move)
             last_state = self.get_robot_position([-1, -1])
-            print(last_state)
             if last_state[0] < 0 or last_state[1] < 0 or last_state[0] > self.size -1 or last_state[1] > self.size -1:
                 move_msg = Twist()
                 self.twist_publisher.publish(move_msg)
