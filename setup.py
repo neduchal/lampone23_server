@@ -25,7 +25,9 @@ setup(
         'console_scripts': [
             'server = lampone23_server.server:main',
             'image_grabber = lampone23_server.image_grabber:main',
-            'controller = lampone23_server.controller:main'            
+            'controller = lampone23_server.controller:main',            
+            'controller = lampone23_server.controller2:main'            
+
         ],
     },
 )
