@@ -46,6 +46,9 @@ class LamponeServerRobotController(Node):
         self.arucoId = 1
         self.arucoParams = cv2.aruco.DetectorParameters_create()
         self.cells = []
+        self.move = Twist()
+        timer_period2 = 0.1 # seconds
+        #self.timer = self.create_timer(timer_period2, self.control_callback)       
         for i in range(8):
             for j in range(8):
                 self.cells.append([i, j, int(55 + i/7 * (445-55)), int(75 + j/7 * (595 - 75))])
@@ -219,6 +222,7 @@ class LamponeServerRobotController(Node):
                     # DO NOTHING
                     pass
                 #print(move_msg)
+                time.sleep(0.1)
                 if time.time() > last_time + 0.05:
                     last_time = time.time()
                     self.twist_publisher.publish(move_msg)
