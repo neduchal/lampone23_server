@@ -32,7 +32,7 @@ class LamponeServerRobotController(Node):
             '/lampone23/trigger',
             self.trigger_callback,
             10)
-        self.trigger == None
+        self.trg = False
         self.trigger_subscriber
         self.twist_publisher = self.create_publisher(Twist, "cmd_vel", 10)
         self.image = None
@@ -215,13 +215,13 @@ class LamponeServerRobotController(Node):
 
     def run_callback(self):
         if time.time() > self.current_time + 1:
-            if len(self.path) > 0  and self.image is not None and self.trigger == True:
+            if len(self.path) > 0  and self.image is not None and self.trg == True:
                 self.process_path(self.path.pop(0))
-                self.trigger = None
+                self.trg = False
             self.current_time = time.time()
     
     def trigger_callback(self, msg):
-        self.trigger = True
+        self.trg = True
         print("Trigger")
 
 def main(args=None):
