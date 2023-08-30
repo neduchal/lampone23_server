@@ -21,12 +21,14 @@ class LamponeServerRobotController(Node):
             self.path_callback,
             10)
         self.solution_subscriber
+        """
         self.image_subscriber = self.create_subscription(
             Image,
             '/image',
             self.image_callback,
             10)
         self.image_subscriber
+        """
         self.trigger_subscriber = self.create_subscription(
             Empty,
             '/lampone23/trigger',
@@ -178,7 +180,6 @@ class LamponeServerRobotController(Node):
                 if time.time() > time_stop + 1.2:
                     break
                 move_msg = Twist()
-
                 if current_move == "L":
                     move_msg.angular.z = -1.0
                 elif current_move == "R":
