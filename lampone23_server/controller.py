@@ -170,6 +170,7 @@ class LamponeServerRobotController(Node):
                 if self.is_move_complete(last_state=last_state, current_state=current_state, move=current_move):
                     break
                 move_msg = Twist()
+                print(current_move)
                 if current_move == "L":
                     move_msg.angular.z = -1
                 elif current_move == "R":
