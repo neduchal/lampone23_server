@@ -62,6 +62,7 @@ class LamponeServerRobotController(Node):
             if len(self.current_path) > 0:
                 current_move = self.current_path[0]
                 current_state = self.get_robot_position(self.last_state[0:2])
+                print(current_state)
                 # Porovnat current a last state zda doslo ke správnému posunu.
                 if self.is_move_complete(last_state=self.last_state, current_state=current_state, move=current_move):
                     print("ouha")
