@@ -89,7 +89,7 @@ class LamponeServerRobotController(Node):
     
     def image_callback(self, data):
         self.image = self.bridge.imgmsg_to_cv2(data)[260:761, 652:1328, :]
-        print("IMAGE")
+        #print("IMAGE")
         pass
 
     def get_robot_position(self, last_position):
@@ -163,6 +163,8 @@ class LamponeServerRobotController(Node):
     def process_path(self, path):
         for current_move in path:
             last_state = self.get_robot_position([-1, -1])
+            print(last_state, current_move)
+
             if last_state[0] < 0 or last_state[1] < 0 or last_state[0] > self.size -1 or last_state[1] > self.size -1:
                 move_msg = Twist()
                 self.twist_publisher.publish(move_msg)
@@ -176,7 +178,6 @@ class LamponeServerRobotController(Node):
                 #    break
                 if time.time() > time_stop + 1.2:
                     break
-                print(last_state, current_state, current_move)
                 move_msg = Twist()
 
                 if current_move == "L":
