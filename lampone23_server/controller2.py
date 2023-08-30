@@ -47,13 +47,80 @@ class LamponeServerRobotController(Node):
         self.arucoParams = cv2.aruco.DetectorParameters_create()
         self.cells = []
         self.move = Twist()
+        self.current_path = ""
+        self.last_state = None
         timer_period2 = 0.1 # seconds
-        #self.timer = self.create_timer(timer_period2, self.control_callback)       
+        self.timer = self.create_timer(timer_period2, self.control_callback)
         for i in range(8):
             for j in range(8):
                 self.cells.append([i, j, int(55 + i/7 * (445-55)), int(75 + j/7 * (595 - 75))])
         self.size = 8
         self.current_time = time.time()
+
+    def control_callback(self):
+        if len(self.path) > 0 and self.trg == True:
+            if len(self.current_path) > 0:
+                current_move = self.current_path[0]
+                if len(self.current_path) > 1:
+                    self.current_path[1:]
+                else:
+                    self.current_path = ""
+                    current_state = self.get_robot_position(self.last_state[0:2])
+                    # Porovnat current a last state zda doslo ke správnému posunu.
+                if self.is_move_complete(last_state=self.last_state, current_state=current_state, move=current_move):
+                    print("ouha")
+                    move_msg = Twist()
+                    self.twist_publisher.publish(move_msg) 
+                    self.last_state = current_state
+                    return
+                move_msg = Twist()
+                if current_move == "L":
+                    move_msg.angular.z = -1.0
+                elif current_move == "R":
+                    move_msg.angular.z = 0.98
+                elif current_move == "F":
+                    move_msg.linear.x = 1.09
+                    last_angle = self.last_state[2]
+                    current_angle = current_state[2]
+                    diff = 0
+                    if last_angle > 350 or last_angle < 10:
+                        pass
+                    elif last_angle > 80 and last_angle < 100:
+                        diff = 90 - current_angle
+                    elif last_angle > 170 and last_angle < 190:
+                        diff = 180 - current_angle
+                    elif last_angle > 260 and last_angle < 280:
+                        diff = 270 - current_angle
+                    if diff > 3:
+                        move_msg.angular.z = 0.1
+                    elif diff < -3:
+                        move_msg.angular.z = -0.1
+                elif current_move == "B":
+                    move_msg.linear.x = -1.09
+
+                    if last_angle > 350 or last_angle < 10:
+                        pass
+                    elif last_angle > 80 and last_angle < 100:
+                        diff = 90 - current_angle
+                    elif last_angle > 170 and last_angle < 190:
+                        diff = 180 - current_angle
+                    elif last_angle > 260 and last_angle < 280:
+                        diff = 270 - current_angle
+                    if diff > 3:
+                        move_msg.angular.z = -0.1
+                    elif diff < 3:
+                        move_msg.angular.z = 0.1                
+                else:
+                    # DO NOTHING
+                    pass
+
+                self.twist_publisher.publish(move_msg)
+                # Poslani zpravy na zastaveni
+            else:
+                self.trg = False
+                self.path = None
+    
+
 
     def get_robot_position_px(self, markerCorner):
         # extract the marker corners (which are always returned in
@@ -90,6 +157,8 @@ class LamponeServerRobotController(Node):
     def path_callback(self, data):
         self.path.append(data.data)
         print(self.path)
+        if self.last_state is None:
+            self.last_state = self.get_robot_position([-1, -1])
         pass
     
     def image_callback(self, data):
@@ -165,6 +234,7 @@ class LamponeServerRobotController(Node):
             return True
         return False
 
+    """
     def process_path(self, path):
         for current_move in path:
             last_state = self.get_robot_position([-1, -1])
@@ -173,71 +243,18 @@ class LamponeServerRobotController(Node):
                 self.twist_publisher.publish(move_msg)
                 break
             last_time = time.time()
-            while current_move is not None:
-                
-                current_state = self.get_robot_position(last_state[0:2])
-                # Porovnat current a last state zda doslo ke správnému posunu.
-                if self.is_move_complete(last_state=last_state, current_state=current_state, move=current_move):
-                    print("ouha")
-                    break
-                move_msg = Twist()
-                if current_move == "L":
-                    move_msg.angular.z = -1.0
-                elif current_move == "R":
-                    move_msg.angular.z = 0.98
-                elif current_move == "F":
-                    move_msg.linear.x = 1.09
-                    last_angle = last_state[2]
-                    current_angle = current_state[2]
-                    diff = 0
-                    if last_angle > 350 or last_angle < 10:
-                        pass
-                    elif last_angle > 80 and last_angle < 100:
-                        diff = 90 - current_angle
-                    elif last_angle > 170 and last_angle < 190:
-                        diff = 180 - current_angle
-                    elif last_angle > 260 and last_angle < 280:
-                        diff = 270 - current_angle
-                    if diff > 3:
-                        move_msg.angular.z = 0.1
-                    elif diff < -3:
-                        move_msg.angular.z = -0.1
+    """
+   
 
-                elif current_move == "B":
-                    move_msg.linear.x = -1.09
-
-                    if last_angle > 350 or last_angle < 10:
-                        pass
-                    elif last_angle > 80 and last_angle < 100:
-                        diff = 90 - current_angle
-                    elif last_angle > 170 and last_angle < 190:
-                        diff = 180 - current_angle
-                    elif last_angle > 260 and last_angle < 280:
-                        diff = 270 - current_angle
-                    if diff > 3:
-                        move_msg.angular.z = -0.1
-                    elif diff < 3:
-                        move_msg.angular.z = 0.1                
-                else:
-                    # DO NOTHING
-                    pass
-                #print(move_msg)
-                time.sleep(0.1)
-                if time.time() > last_time + 0.05:
-                    last_time = time.time()
-                    self.twist_publisher.publish(move_msg)
-            # Poslani zpravy na zastaveni
-            move_msg = Twist()
-            self.twist_publisher.publish(move_msg)      
-            time.sleep(1)
-
-
+    """
     def run_callback(self):
         if time.time() > self.current_time + 1:
             if len(self.path) > 0 and self.trg == True:
                 self.process_path(self.path.pop(0))
                 self.trg = False
             self.current_time = time.time()
+
+    """
     
     def trigger_callback(self, msg):
         self.trg = True
