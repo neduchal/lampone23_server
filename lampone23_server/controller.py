@@ -80,6 +80,7 @@ class LamponeServerRobotController(Node):
 
     def path_callback(self, data):
         self.path.append(data.data)
+        print(self.path)
         pass
     
     def image_callback(self, data):
@@ -211,9 +212,9 @@ class LamponeServerRobotController(Node):
 
     def run(self):
         if time.time() > self.current_time + 1:
-            if len(self.path) > 0  and self.image is not None and self.trigger is not None:
+            if len(self.path) > 0  and self.image is not None and self.trigger == True:
                 self.process_path(self.path.pop(0))
-                self.trigger == None
+                self.trigger = None
             self.current_time = time.time()
         
     def trigger_callback(self, msg):
