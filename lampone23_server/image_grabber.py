@@ -36,11 +36,13 @@ class ImageGrabber(Node):
             if not ret:
                 print("Can't receive frame (stream end?). Exiting ...")
                 break
+            """
             if time.time() - self.current_time > 5:
                 cv2.imwrite("/var/www/html/image/image.png", frame)
                 self.current_time = time.time()
 
             self.image = frame
+            """
             self.image_publisher.publish(self.bridge.cv2_to_imgmsg(frame, "bgr8"))
 
 def main(args=None):
