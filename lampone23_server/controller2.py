@@ -191,11 +191,11 @@ class LamponeServerRobotController(Node):
 
         last_vec = last_state[3:]
         current_vec = current_state[3:]
-        if last_vec[0] == current_vec[0] and last_vec[1] == current_vec[1]:
-            angle = last_state[2]
-            angle = 180 * np.arccos(current_vec.dot(last_vec))/np.pi
-            if (current_state[2] - last_state[2]) < 0 or np.abs(last_state[2]- current_state[2]) > 180:
-                angle = -angle
+        #if last_vec[0] == current_vec[0] and last_vec[1] == current_vec[1]:
+        #    angle = last_state[2]
+        angle = 180 * np.arccos(current_vec.dot(last_vec))/np.pi
+        if (current_state[2] - last_state[2]) < 0 or np.abs(last_state[2]- current_state[2]) > 180:
+            angle = -angle
 
         if move == "L":
             if angle  > 87 and angle < 93:
