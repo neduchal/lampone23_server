@@ -74,6 +74,7 @@ class LamponeServerRobotController(Node):
         for i, cell in enumerate(cells):
             x = robot_position[0] - cell[3]
             y = robot_position[1] - cell[2]
+            print(x, y)
             if np.linalg.norm([x,y]) < np.linalg.norm(min_dist) and np.linalg.norm([x,y]) < 50:
                 min_dist = np.array([x,y])
                 pos = [cell[0], cell[1]]
