@@ -174,11 +174,11 @@ class LamponeServerRobotController(Node):
                     break
                 move_msg = Twist()
                 if current_move == "L":
-                    move_msg.angular.z = -1
+                    move_msg.angular.z = -1.0
                 elif current_move == "R":
-                    move_msg.angular.z = 1
+                    move_msg.angular.z = 1.0
                 elif current_move == "F":
-                    move_msg.linear.x = 1
+                    move_msg.linear.x = 1.0
                     last_angle = last_state[2]
                     current_angle = current_state[2]
                     diff = 0
@@ -195,7 +195,7 @@ class LamponeServerRobotController(Node):
                     elif diff < 3:
                         move_msg.angular.z = -0.1
                 elif current_move == "B":
-                    move_msg.linear.x = -1
+                    move_msg.linear.x = -1.0
                     if last_angle > 350 or last_angle < 10:
                         pass
                     elif last_angle > 80 and last_angle < 100:
