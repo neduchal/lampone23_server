@@ -32,6 +32,7 @@ class LamponeServerRobotController(Node):
             '/lampone23/trigger',
             self.trigger_callback,
             10)
+        self.trigger == None
         self.trigger_subscriber
         self.twist_publisher = self.create_publisher(Twist, "cmd_vel", 10)
         self.image = None
