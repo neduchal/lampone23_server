@@ -61,17 +61,17 @@ class LamponeServerRobotController(Node):
         if len(self.path) > 0 and self.trg == True:
             if len(self.current_path) > 0:
                 current_move = self.current_path[0]
-                if len(self.current_path) > 1:
-                    self.current_path[1:]
-                else:
-                    self.current_path = ""
-                    current_state = self.get_robot_position(self.last_state[0:2])
-                    # Porovnat current a last state zda doslo ke správnému posunu.
+                current_state = self.get_robot_position(self.last_state[0:2])
+                # Porovnat current a last state zda doslo ke správnému posunu.
                 if self.is_move_complete(last_state=self.last_state, current_state=current_state, move=current_move):
                     print("ouha")
                     move_msg = Twist()
                     self.twist_publisher.publish(move_msg) 
                     self.last_state = current_state
+                    if len(self.current_path) > 1:
+                        self.current_path[1:]
+                    else:
+                        self.current_path = ""
                     return
                 move_msg = Twist()
                 if current_move == "L":
@@ -118,7 +118,7 @@ class LamponeServerRobotController(Node):
                 # Poslani zpravy na zastaveni
             else:
                 self.trg = False
-                self.path = None
+                self.path = ""
     
 
 
