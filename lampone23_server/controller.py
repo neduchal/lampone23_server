@@ -44,7 +44,7 @@ class LamponeServerRobotController(Node):
         for i in range(8):
             for j in range(8):
                 self.cells.append([i, j, int(55 + i/7 * (445-55)), int(75 + j/7 * (595 - 75))])
-        self.size = 10
+        self.size = 8
         self.current_time = time.time()
 
     def get_robot_position_px(self, markerCorner):
@@ -219,6 +219,7 @@ class LamponeServerRobotController(Node):
         
     def trigger_callback(self, msg):
         self.trigger = True
+        print("Trigger")
 
 def main(args=None):
     rclpy.init(args=args)
