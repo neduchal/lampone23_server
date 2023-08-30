@@ -29,7 +29,7 @@ class LamponeServerRobotController(Node):
         self.image_subscriber
         self.trigger_subscriber = self.create_subscription(
             Empty,
-            'lampone23/trigger',
+            '/lampone23/trigger',
             self.trigger_callback,
             10)
         self.trigger_subscriber

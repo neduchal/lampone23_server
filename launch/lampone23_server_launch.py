@@ -18,18 +18,27 @@ def generate_launch_description():
             package='lampone23_server',
             node_namespace='lampone23',
             node_executable='image_grabber',
-            node_name='lampone23_image_grabber'
+            node_name='lampone23_image_grabber',
+            output='screen',
+            emulate_tty=True,
+            arguments=[('__log_level:=debug')]
         ),
        Node(
             package='lampone23_server',
             node_namespace='lampone23',
             node_executable='server',
-            node_name='lampone23_server'
+            node_name='lampone23_server',
+            output='screen',
+            emulate_tty=True,
+            arguments=[('__log_level:=debug')]            
         ),
        Node(
             package='lampone23_server',
             node_namespace='lampone23',
             node_executable='controller',
-            node_name='lampone23_controller'
+            node_name='lampone23_controller',
+            output='screen',
+            emulate_tty=True,
+            arguments=[('__log_level:=debug')]            
         )        
     ])
