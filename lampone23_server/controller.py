@@ -88,7 +88,7 @@ class LamponeServerRobotController(Node):
         pass
     
     def image_callback(self, data):
-        self.image = self.bridge.imgmsg_to_cv2(data)
+        self.image = self.bridge.imgmsg_to_cv2(data)[260:761, 652:1328, :]
         pass
 
     def get_robot_position(self, last_position):
