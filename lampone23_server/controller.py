@@ -171,10 +171,10 @@ class LamponeServerRobotController(Node):
             while current_move is not None:
                 current_state = self.get_robot_position(last_state[0:2])
                 # Porovnat current a last state zda doslo ke správnému posunu.
-                if self.is_move_complete(last_state=last_state, current_state=current_state, move=current_move):
-                    print("ouha")
-                    break
-                if time.time() > time_stop + 1.5:
+                #if self.is_move_complete(last_state=last_state, current_state=current_state, move=current_move):
+                #    print("ouha")
+                #    break
+                if time.time() > time_stop + 1.2:
                     break
                 print(last_state, current_state, current_move)
                 move_msg = Twist()
@@ -184,7 +184,7 @@ class LamponeServerRobotController(Node):
                 elif current_move == "R":
                     move_msg.angular.z = 1.0
                 elif current_move == "F":
-                    move_msg.linear.x = 1
+                    move_msg.linear.x = 1.0
                     last_angle = last_state[2]
                     current_angle = current_state[2]
                     diff = 0
@@ -201,7 +201,7 @@ class LamponeServerRobotController(Node):
                     elif diff < -3:
                         move_msg.angular.z = -0.1
                 elif current_move == "B":
-                    move_msg.linear.x = -1
+                    move_msg.linear.x = -1.0
                     if last_angle > 350 or last_angle < 10:
                         pass
                     elif last_angle > 80 and last_angle < 100:
