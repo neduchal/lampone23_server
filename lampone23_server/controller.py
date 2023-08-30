@@ -229,8 +229,9 @@ class LamponeServerRobotController(Node):
                     last_time = time.time()
                     self.twist_publisher.publish(move_msg)
             # Poslani zpravy na zastaveni
-        move_msg = Twist()
-        self.twist_publisher.publish(move_msg)                
+            move_msg = Twist()
+            self.twist_publisher.publish(move_msg)      
+            time.sleep(1)          
 
 
     def run_callback(self):
