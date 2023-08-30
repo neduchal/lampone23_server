@@ -171,7 +171,9 @@ class LamponeServerRobotController(Node):
             #    self.twist_publisher.publish(move_msg)
             #    break
             time_stop = time.time()
+            last_time = time.time()
             while current_move is not None:
+                
                 #current_state = self.get_robot_position(last_state[0:2])
                 # Porovnat current a last state zda doslo ke správnému posunu.
                 #if self.is_move_complete(last_state=last_state, current_state=current_state, move=current_move):
@@ -223,7 +225,9 @@ class LamponeServerRobotController(Node):
                     # DO NOTHING
                     pass
                 #print(move_msg)
-                self.twist_publisher.publish(move_msg)
+                if time.time() > last_time + 0.1:
+                    last_time = time.time()
+                    self.twist_publisher.publish(move_msg)
             # Poslani zpravy na zastaveni
             move_msg = Twist()
             self.twist_publisher.publish(move_msg)                
