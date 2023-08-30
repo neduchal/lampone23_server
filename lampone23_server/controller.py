@@ -116,7 +116,6 @@ class LamponeServerRobotController(Node):
 
         last_vec = last_state[3:]
         current_vec = current_state[3:]
-        print(last_vec, current_vec)
         if last_vec[0] == current_vec[0] and last_vec[1] == current_vec[1]:
             angle = last_state[2]
             angle = 180 * np.arccos(current_vec.dot(last_vec))/np.pi
@@ -174,6 +173,7 @@ class LamponeServerRobotController(Node):
                 if self.is_move_complete(last_state=last_state, current_state=current_state, move=current_move):
                     print("ouha")
                     break
+                print("Jsme tu")
                 move_msg = Twist()
                 if current_move == "L":
                     move_msg.angular.z = -1.0
