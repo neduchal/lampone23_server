@@ -183,9 +183,9 @@ class LamponeServerRobotController(Node):
                     break
                 move_msg = Twist()
                 if current_move == "L":
-                    move_msg.angular.z = -1.0
+                    move_msg.angular.z = -0.9
                 elif current_move == "R":
-                    move_msg.angular.z = 1.0
+                    move_msg.angular.z = 0.9
                 elif current_move == "F":
                     move_msg.linear.x = 1.09
                     """
