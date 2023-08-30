@@ -64,7 +64,7 @@ class LamponeServerRobotController(Node):
         cX = int((topLeft[0] + bottomRight[0]) / 2.0)
         cY = int((topLeft[1] + bottomRight[1]) / 2.0)
         u_vec = [topLeft[0] - bottomLeft[0], topLeft[1] - bottomLeft[1]]
-        u_vec = np.array(u_vec / np.norm(u_vec))
+        u_vec = np.array(u_vec / np.linalg.norm(u_vec))
         angle = np.arctan2(-u_vec[1], -u_vec[2]) # Je to -pi az pi. 0 kdyz je kod nahoru
         return np.array([cX, cY, angle, -u_vec[0], -u_vec[1]])
 
@@ -74,7 +74,7 @@ class LamponeServerRobotController(Node):
         for i, cell in enumerate(cells):
             x = robot_position[0] - cell[2]
             y = robot_position[1] - cell[3]
-            if np.norm([x,y]) < np.norm(min_dist) and np.norm([x,y]) < 50:
+            if np.linalg.norm([x,y]) < np.linalg.norm(min_dist) and np.linalg.norm([x,y]) < 50:
                 min_dist = np.array([x,y])
                 pos = [cell[0], cell[1]]
         if pos[0] == -1 and pos[1] == -1:
