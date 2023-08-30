@@ -69,12 +69,12 @@ class LamponeServerRobotController(Node):
         return np.array([cX, cY, angle, -u_vec[0], -u_vec[1]])
 
     def get_robot_position_in_grid(self, cells, robot_position, last_position):
-        min_dist = 100
+        min_dist = 100000
         pos = [-1,-1]
         for i, cell in enumerate(cells):
             x = robot_position[0] - cell[3]
             y = robot_position[1] - cell[2]
-            print(x, y, robot_position[0:2])
+            #print(x, y, robot_position[0:2])
             if np.linalg.norm([x,y]) < np.linalg.norm(min_dist) and np.linalg.norm([x,y]) < 50:
                 min_dist = np.array([x,y])
                 pos = [cell[0], cell[1]]
