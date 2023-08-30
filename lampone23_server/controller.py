@@ -99,6 +99,8 @@ class LamponeServerRobotController(Node):
         (corners, ids, rejected) = cv2.aruco.detectMarkers(img, self.arucoDict,
             parameters=self.arucoParams)
         # verify *at least* one ArUco marker was detected
+        robot_pos_grid = None
+        print(corners)
         if len(corners) > 0:
             # flatten the ArUco IDs list
             ids = ids.flatten()            
