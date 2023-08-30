@@ -68,7 +68,7 @@ class LamponeServerRobotController(Node):
         angle = np.arctan2(-u_vec[1], -u_vec[0]) # Je to -pi az pi. 0 kdyz je kod nahoru
         return np.array([cX, cY, angle, -u_vec[0], -u_vec[1]])
 
-    def get_robot_position_in_grid(self, cells, robot_position, grid_size, last_position):
+    def get_robot_position_in_grid(self, cells, robot_position, last_position):
         min_dist = robot_position[0:2].copy()
         pos = [-1,-1]
         for i, cell in enumerate(cells):
