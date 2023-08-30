@@ -118,7 +118,6 @@ class LamponeServerRobotController(Node):
                 # Poslani zpravy na zastaveni
             else:
                 self.trg = False
-                self.path = ""
     
 
 
@@ -157,6 +156,7 @@ class LamponeServerRobotController(Node):
     def path_callback(self, data):
         self.path.append(data.data)
         print(self.path)
+        self.current_path = data.data
         if self.last_state is None:
             self.last_state = self.get_robot_position([-1, -1])
         pass
