@@ -156,8 +156,7 @@ class LamponeServerRobotController(Node):
         return False
 
     def process_path(self, path):
-        while len(path) > 0:
-            current_move = path.pop(0)
+        for current_move in path:
             last_state = self.get_robot_position([-1, -1])
             if last_state[0] < 0 or last_state[1] < 0 or last_state[0] > self.size -1 or last_state[1] > self.size -1:
                 move_msg = Twist()
