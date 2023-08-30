@@ -231,7 +231,7 @@ class LamponeServerRobotController(Node):
 
     def run_callback(self):
         if time.time() > self.current_time + 1:
-            if len(self.path) > 0  and self.image is not None and self.trg == True:
+            if len(self.path) > 0 and self.trg == True:
                 self.process_path(self.path.pop(0))
                 self.trg = False
             self.current_time = time.time()
