@@ -159,7 +159,9 @@ class LamponeServerRobotController(Node):
 
     def process_path(self, path):
         for current_move in path:
+            print(current_move)
             last_state = self.get_robot_position([-1, -1])
+            print(last_state)
             if last_state[0] < 0 or last_state[1] < 0 or last_state[0] > self.size -1 or last_state[1] > self.size -1:
                 move_msg = Twist()
                 self.twist_publisher.publish(move_msg)
@@ -170,7 +172,6 @@ class LamponeServerRobotController(Node):
                 if self.is_move_complete(last_state=last_state, current_state=current_state, move=current_move):
                     break
                 move_msg = Twist()
-                print(current_move)
                 if current_move == "L":
                     move_msg.angular.z = -1
                 elif current_move == "R":
