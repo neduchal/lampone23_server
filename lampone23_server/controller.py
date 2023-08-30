@@ -35,6 +35,8 @@ class LamponeServerRobotController(Node):
         self.trigger_subscriber
         self.twist_publisher = self.create_publisher(Twist, "cmd_vel", 10)
         self.image = None
+        timer_period = 1 # seconds
+        self.timer = self.create_timer(timer_period, self.run_callback)
         self.path = []
         self.bridge = CvBridge()
         self.arucoDict = cv2.aruco.Dictionary_get(cv2.aruco.DICT_4X4_50)
@@ -210,7 +212,7 @@ class LamponeServerRobotController(Node):
             self.twist_publisher.Publish(move_msg)                
 
 
-    def run(self):
+    def run_callback(self):
         while True:
             if time.time() > self.current_time + 1:
                 if len(self.path) > 0  and self.image is not None and self.trigger == True:
@@ -227,7 +229,7 @@ def main(args=None):
 
     controller = LamponeServerRobotController()
 
-    controller.run()
+    #controller.run()
 
     rclpy.spin(controller)
 
