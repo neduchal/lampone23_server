@@ -19,7 +19,7 @@ class ImageGrabber(Node):
     def __init__(self):
         super().__init__('image_grabber')
         self.image_publisher = self.create_publisher(Image, "/image", 10)
-        self.cap =  cv2.VideoCapture(f'nvarguscamerasrc sensor-mode=0 ! video/x-raw(memory:NVMM), width=1920, height=1080, format=(string)NV12, framerate=(fraction)30/1 ! nvvidconv ! video/x-raw, width=(int)1920, height=(int)1080, format=(string)BGRx ! videoconvert ! appsink')
+        self.cap =  cv2.VideoCapture(f'nvarguscamerasrc sensor-mode=4 ! video/x-raw(memory:NVMM), width=1920, height=1080, format=(string)NV12, framerate=(fraction)30/1 ! nvvidconv ! video/x-raw, width=(int)1920, height=(int)1080, format=(string)BGRx ! videoconvert ! appsink')
         self.image = None
         self.bridge = CvBridge()
         self.current_time = time.time()
