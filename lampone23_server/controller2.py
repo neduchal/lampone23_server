@@ -219,7 +219,7 @@ class LamponeServerRobotController(Node):
         #    angle = last_state[2]
         #angle = 180 * np.arccos(current_vec.dot(last_vec))/np.pi
 
-        angle = 180 * (current_state[2] - last_state[2]) / np.pi
+        angle = 180 * (current_state[2] - last_state[2] / np.pi) / np.pi
         if angle < -180:
             angle =  angle + 360
         elif angle > 180:
@@ -228,11 +228,11 @@ class LamponeServerRobotController(Node):
         #    angle = -angle
         if move == "L":
             print(angle)
-            if angle  > 87 and angle < 93:
+            if angle  > 82 and angle < 98:
                 return True
         elif move == "R":
             print(angle)
-            if angle  > -93 and angle < -87:
+            if angle  > -98 and angle < -82:
                 return True       
         elif move == "F":
             if (last_state[2] > 355) or (last_state[2] < 5):
