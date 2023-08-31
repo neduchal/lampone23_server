@@ -46,7 +46,7 @@ class LamponeServerRobotController(Node):
         self.trigger_subscriber
         self.twist_publisher = self.create_publisher(Twist, "/cmd_vel", 10)
         self.image = None
-        timer_period = 5 # seconds
+        timer_period = 0.1 # seconds
         self.timer2 = self.create_timer(timer_period, self.save_callback)
         self.path = []
         self.bridge = CvBridge()
@@ -57,7 +57,7 @@ class LamponeServerRobotController(Node):
         self.move = Twist()
         self.current_path = ""
         self.last_state = None
-        timer_period2 = 0.1 # seconds
+        timer_period2 = 0.05 # seconds
         self.timer = self.create_timer(timer_period2, self.control_callback)
         for i in range(8):
             for j in range(8):
