@@ -96,9 +96,9 @@ class LamponeServerRobotController(Node):
                     return
                 move_msg = Twist()
                 if current_move == "L":
-                    move_msg.angular.z = -0.7
+                    move_msg.angular.z = -0.9
                 elif current_move == "R":
-                    move_msg.angular.z = 0.7
+                    move_msg.angular.z = 0.9
                 elif current_move == "F":
                     move_msg.linear.x = 0.75
                     last_angle = self.last_state[2]
@@ -222,9 +222,11 @@ class LamponeServerRobotController(Node):
             angle = -angle
 
         if move == "L":
+            print(angle)
             if angle  > 87 and angle < 93:
                 return True
         elif move == "R":
+            print(angle)
             if angle  > -93 and angle < -87:
                 return True       
         elif move == "F":
