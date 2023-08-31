@@ -161,7 +161,7 @@ class LamponeServerRobotController(Node):
         angle = 180 * angle/np.pi # Je to -pi az pi . zkontrolovat zda s tim pocita i zbytek kodu  
         if angle < 0:
             angle = angle + 360
-        print(angle)
+        #print(angle)
         return np.array([cX, cY, angle, -u_vec[0], -u_vec[1]])
 
     def get_robot_position_in_grid(self, cells, robot_position, last_position):
@@ -228,6 +228,7 @@ class LamponeServerRobotController(Node):
             angle =  angle + 360
         elif angle > 180:
             angle = -(360 - angle)
+        print(angle)
         #if (current_state[2] - last_state[2]) < 0 or np.abs(last_state[2]- current_state[2]) > 180:
         #    angle = -angle
         if move == "L":
