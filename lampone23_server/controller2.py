@@ -211,7 +211,7 @@ class LamponeServerRobotController(Node):
 
     def is_move_complete(self, last_state, current_state, move):
         state = current_state - last_state
-
+        print(state)
         last_vec = last_state[3:]
         current_vec = current_state[3:]
         #if last_vec[0] == current_vec[0] and last_vec[1] == current_vec[1]:
