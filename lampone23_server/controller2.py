@@ -77,7 +77,7 @@ class LamponeServerRobotController(Node):
             if len(self.current_path) > 0:
                 current_move = self.current_path[0]
                 current_state = self.get_robot_position(self.last_state[0:2])
-                if current_state == None:
+                if current_state is None:
                     move_msg = Twist()
                     self.twist_publisher.publish(move_msg)                 
                     return                      
