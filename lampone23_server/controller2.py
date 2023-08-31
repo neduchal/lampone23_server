@@ -213,14 +213,19 @@ class LamponeServerRobotController(Node):
     def is_move_complete(self, last_state, current_state, move):
         state = current_state - last_state
         #print(last_state, current_state,state)
-        last_vec = last_state[3:]
-        current_vec = current_state[3:]
+        #last_vec = last_state[3:]
+        #current_vec = current_state[3:]
         #if last_vec[0] == current_vec[0] and last_vec[1] == current_vec[1]:
         #    angle = last_state[2]
-        angle = 180 * np.arccos(current_vec.dot(last_vec))/np.pi
-        if (current_state[2] - last_state[2]) < 0 or np.abs(last_state[2]- current_state[2]) > 180:
-            angle = -angle
+        #angle = 180 * np.arccos(current_vec.dot(last_vec))/np.pi
 
+        angle = current_state[2] - last_state[2]
+        if angle < -180:
+            angle =  angle + 360
+        elif angle > 180:
+            angle = -(360 - angle)
+        #if (current_state[2] - last_state[2]) < 0 or np.abs(last_state[2]- current_state[2]) > 180:
+        #    angle = -angle
         if move == "L":
             print(angle)
             if angle  > 87 and angle < 93:
