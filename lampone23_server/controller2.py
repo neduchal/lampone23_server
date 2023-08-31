@@ -46,8 +46,8 @@ class LamponeServerRobotController(Node):
         self.trigger_subscriber
         self.twist_publisher = self.create_publisher(Twist, "/cmd_vel", 10)
         self.image = None
-        timer_period = 1 # seconds
-        #self.timer = self.create_timer(timer_period, self.run_callback)
+        timer_period = 30 # seconds
+        self.timer = self.create_timer(timer_period, self.save_callback)
         self.path = []
         self.bridge = CvBridge()
         self.arucoDict = cv2.aruco.Dictionary_get(cv2.aruco.DICT_4X4_50)
@@ -64,6 +64,11 @@ class LamponeServerRobotController(Node):
                 self.cells.append([i, j, int(55 + i/7 * (445-55)), int(75 + j/7 * (595 - 75))])
         self.size = 8
         self.current_time = time.time()
+
+    def save_callback(self):
+        ret, frame = self.cap.read()
+        self.image = frame.copy()
+        cv2.imwrite("/var/www/html/image/image.png", frame)
 
     def control_callback(self):
         if len(self.path) > 0 and self.trg == True:
@@ -190,7 +195,7 @@ class LamponeServerRobotController(Node):
             parameters=self.arucoParams)
         # verify *at least* one ArUco marker was detected
         robot_pos_grid = None
-        #print(corners)
+        print(corners)
         if len(corners) > 0:
             # flatten the ArUco IDs list
             ids = ids.flatten()            
