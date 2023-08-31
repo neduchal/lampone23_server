@@ -22,7 +22,7 @@ class LamponeServerRobotController(Node):
             self.path_callback,
             10)
         self.solution_subscriber
-        self.cap =  cv2.VideoCapture(f'nvarguscamerasrc sensor-mode=3 ! video/x-raw(memory:NVMM), width=1920, height=1080, format=(string)NV12, framerate=(fraction)29/1 ! nvvidconv ! video/x-raw, width=(int)1920, height=(int)1080, format=(string)BGRx ! videoconvert ! appsink')
+        self.cap =  cv2.VideoCapture(f'nvarguscamerasrc sensor-mode=3 ! video/x-raw(memory:NVMM), width=1920, height=1080, format=(string)NV12, framerate=(fraction)20/1 ! nvvidconv ! video/x-raw, width=(int)1920, height=(int)1080, format=(string)BGRx ! videoconvert ! appsink')
         """
         self.image_subscriber = self.create_subscription(
             Image,
@@ -228,7 +228,7 @@ class LamponeServerRobotController(Node):
             angle =  angle + 360
         elif angle > 180:
             angle = -(360 - angle)
-        print(angle)
+        #print(angle)
         #if (current_state[2] - last_state[2]) < 0 or np.abs(last_state[2]- current_state[2]) > 180:
         #    angle = -angle
         if move == "L":
