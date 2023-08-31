@@ -240,29 +240,29 @@ class LamponeServerRobotController(Node):
             if angle  > -98 and angle < -82:
                 return True       
         elif move == "F":
-            if (last_state[2] > 355) or (last_state[2] < 5):
+            if (last_state[2] > 350) or (last_state[2] < 10):
                 if state[0] == -1:
                     return True
-            elif (last_state[2] > 85) and (last_state[2] < 95):
+            elif (last_state[2] > 80) and (last_state[2] < 100):
                 if state[1] == -1:
                     return True
-            elif (last_state[2] > 175) or (last_state[2] < 185):
+            elif (last_state[2] > 170) or (last_state[2] < 190):
                 if state[0] == 1:
                     return True
-            elif (last_state[2] > 265) or (last_state[2] < 275):
+            elif (last_state[2] > 270) or (last_state[2] < 280):
                 if state[1] == 1:
                     return True
         elif move == "B":
-            if (last_state[2] > 355) or (last_state[2] < 5):
+            if (last_state[2] > 350) or (last_state[2] < 10):
                 if state[0] == 1:
                     return True
-            elif (last_state[2] > 85) and (last_state[2] < 95):
+            elif (last_state[2] > 80) and (last_state[2] < 100):
                 if state[1] == 1:
                     return True
-            elif (last_state[2] > 175) or (last_state[2] < 185):
+            elif (last_state[2] > 170) or (last_state[2] < 190):
                 if state[0] == -1:
                     return True
-            elif (last_state[2] > 265) or (last_state[2] < 275):
+            elif (last_state[2] > 260) or (last_state[2] < 280):
                 if state[1] == -1:
                     return True
             pass
