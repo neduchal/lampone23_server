@@ -43,7 +43,7 @@ class ImageGrabber(Node):
 
             self.image = frame
             """
-            #self.image_publisher.publish(self.bridge.cv2_to_imgmsg(frame, "bgr8"))
+            self.image_publisher.publish(self.bridge.cv2_to_imgmsg(frame, "bgr8"))
 
 def main(args=None):
     rclpy.init(args=args)
