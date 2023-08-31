@@ -72,8 +72,9 @@ class LamponeServerRobotController(Node):
 
     def control_callback(self):
         if len(self.path) > 0 and self.trg == True:
-            ret, frame = self.cap.read()
-            self.image = frame.copy()[260:761, 652:1328, :]
+            for i in range(2):
+                ret, frame = self.cap.read()
+                self.image = frame.copy()[260:761, 652:1328, :]
             if len(self.current_path) > 0:
                 current_move = self.current_path[0]
                 #print(current_move)
