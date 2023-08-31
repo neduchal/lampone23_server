@@ -90,7 +90,7 @@ points = []
 
 for i in range(8):
     for j in range(8):
-        points.append([i, j, int(55 + i/7 * (445-55)), int(75 + j/7 * (595 - 75))])
+        points.append([i, j, int(45 + i/7 * (455-45)), int(65 + j/7 * (605 - 65))])
 
 image2 = image.copy()
 
