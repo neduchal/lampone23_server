@@ -77,6 +77,10 @@ class LamponeServerRobotController(Node):
             if len(self.current_path) > 0:
                 current_move = self.current_path[0]
                 current_state = self.get_robot_position(self.last_state[0:2])
+                if current_state == None:
+                    move_msg = Twist()
+                    self.twist_publisher.publish(move_msg)                 
+                    return                      
                 print(current_state)
                 # Porovnat current a last state zda doslo ke správnému posunu.
                 if self.is_move_complete(last_state=self.last_state, current_state=current_state, move=current_move):
@@ -199,10 +203,10 @@ class LamponeServerRobotController(Node):
         if len(corners) > 0:
             # flatten the ArUco IDs list
             ids = ids.flatten()            
-        for (markerCorner, markerID) in zip(corners, ids):
-            if markerID == self.arucoId:
-                robot_position = self.get_robot_position_px(markerCorner)
-                robot_pos_grid = self.get_robot_position_in_grid(self.cells, robot_position, last_position)
+            for (markerCorner, markerID) in zip(corners, ids):
+                if markerID == self.arucoId:
+                    robot_position = self.get_robot_position_px(markerCorner)
+                    robot_pos_grid = self.get_robot_position_in_grid(self.cells, robot_position, last_position)
         return robot_pos_grid
 
     def is_move_complete(self, last_state, current_state, move):
