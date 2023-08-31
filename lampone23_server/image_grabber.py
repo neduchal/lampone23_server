@@ -31,7 +31,7 @@ class ImageGrabber(Node):
     def run(self):
         while True:
             ret, frame = self.cap.read()
-
+            print(time.time())
             # if frame is read correctly ret is True
             if not ret:
                 print("Can't receive frame (stream end?). Exiting ...")
