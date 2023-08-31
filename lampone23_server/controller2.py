@@ -76,6 +76,7 @@ class LamponeServerRobotController(Node):
             self.image = frame.copy()[260:761, 652:1328, :]
             if len(self.current_path) > 0:
                 current_move = self.current_path[0]
+                print(current_move)
                 current_state = self.get_robot_position(self.last_state[0:2])
                 if current_state is None:
                     move_msg = Twist()
@@ -211,7 +212,7 @@ class LamponeServerRobotController(Node):
 
     def is_move_complete(self, last_state, current_state, move):
         state = current_state - last_state
-        print(last_state, current_state,state)
+        #print(last_state, current_state,state)
         last_vec = last_state[3:]
         current_vec = current_state[3:]
         #if last_vec[0] == current_vec[0] and last_vec[1] == current_vec[1]:
