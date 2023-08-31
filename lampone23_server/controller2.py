@@ -57,7 +57,7 @@ class LamponeServerRobotController(Node):
         self.move = Twist()
         self.current_path = ""
         self.last_state = None
-        timer_period2 = 0.05 # seconds
+        timer_period2 = 0.1 # seconds
         self.timer = self.create_timer(timer_period2, self.control_callback)
         for i in range(8):
             for j in range(8):
