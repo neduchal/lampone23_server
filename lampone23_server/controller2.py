@@ -46,7 +46,7 @@ class LamponeServerRobotController(Node):
         self.trigger_subscriber
         self.twist_publisher = self.create_publisher(Twist, "/cmd_vel", 10)
         self.image = None
-        timer_period = 30 # seconds
+        timer_period = 5 # seconds
         self.timer2 = self.create_timer(timer_period, self.save_callback)
         self.path = []
         self.bridge = CvBridge()
