@@ -228,29 +228,29 @@ class LamponeServerRobotController(Node):
                 return True       
         elif move == "F":
             if (last_state[2] > 355) or (last_state[2] < 5):
-                if state[0] == 1:
-                    return True
-            elif (last_state[2] > 85) and (last_state[2] < 95):
-                if state[1] == 1:
-                    return True
-            elif (last_state[2] > 175) or (last_state[2] < 185):
                 if state[0] == -1:
                     return True
-            elif (last_state[2] > 265) or (last_state[2] < 275):
+            elif (last_state[2] > 85) and (last_state[2] < 95):
                 if state[1] == -1:
+                    return True
+            elif (last_state[2] > 175) or (last_state[2] < 185):
+                if state[0] == 1:
+                    return True
+            elif (last_state[2] > 265) or (last_state[2] < 275):
+                if state[1] == 1:
                     return True
         elif move == "B":
             if (last_state[2] > 355) or (last_state[2] < 5):
-                if state[0] == -1:
-                    return True
-            elif (last_state[2] > 85) and (last_state[2] < 95):
-                if state[1] == -1:
-                    return True
-            elif (last_state[2] > 175) or (last_state[2] < 185):
                 if state[0] == 1:
                     return True
-            elif (last_state[2] > 265) or (last_state[2] < 275):
+            elif (last_state[2] > 85) and (last_state[2] < 95):
                 if state[1] == 1:
+                    return True
+            elif (last_state[2] > 175) or (last_state[2] < 185):
+                if state[0] == -1:
+                    return True
+            elif (last_state[2] > 265) or (last_state[2] < 275):
+                if state[1] == -1:
                     return True
             pass
         else:
