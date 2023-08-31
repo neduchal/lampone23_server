@@ -76,13 +76,13 @@ class LamponeServerRobotController(Node):
             self.image = frame.copy()[260:761, 652:1328, :]
             if len(self.current_path) > 0:
                 current_move = self.current_path[0]
-                print(current_move)
+                #print(current_move)
                 current_state = self.get_robot_position(self.last_state[0:2])
                 if current_state is None:
                     move_msg = Twist()
                     self.twist_publisher.publish(move_msg)                 
                     return                      
-                print(current_state)
+                #print(current_state)
                 # Porovnat current a last state zda doslo ke správnému posunu.
                 if self.is_move_complete(last_state=self.last_state, current_state=current_state, move=current_move):
                     print("ouha")
@@ -157,7 +157,8 @@ class LamponeServerRobotController(Node):
         cY = int((topLeft[1] + bottomRight[1]) / 2.0)
         u_vec = [topLeft[0] - bottomLeft[0], topLeft[1] - bottomLeft[1]]
         u_vec = np.array(u_vec / np.linalg.norm(u_vec))
-        angle = np.arctan2(-u_vec[1], -u_vec[0]) # Je to -pi az pi. 0 kdyz je kod nahoru
+        angle = np.arctan2(-u_vec[1], -u_vec[0])# Je to -pi az pi. 0 kdyz je kod nahoru
+        print(angle)
         return np.array([cX, cY, angle, -u_vec[0], -u_vec[1]])
 
     def get_robot_position_in_grid(self, cells, robot_position, last_position):
@@ -200,7 +201,7 @@ class LamponeServerRobotController(Node):
             parameters=self.arucoParams)
         # verify *at least* one ArUco marker was detected
         robot_pos_grid = None
-        print(corners)
+        #print(corners)
         if len(corners) > 0:
             # flatten the ArUco IDs list
             ids = ids.flatten()            
@@ -227,11 +228,11 @@ class LamponeServerRobotController(Node):
         #if (current_state[2] - last_state[2]) < 0 or np.abs(last_state[2]- current_state[2]) > 180:
         #    angle = -angle
         if move == "L":
-            print(angle)
+            #print(angle)
             if angle < -82 and angle > -98:
                 return True
         elif move == "R":
-            print(angle)
+            #print(angle)
             if angle  < 98 and angle > 82:
                 return True       
         elif move == "F":
