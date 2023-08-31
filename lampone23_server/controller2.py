@@ -90,8 +90,7 @@ class LamponeServerRobotController(Node):
                     self.twist_publisher.publish(move_msg) 
                     self.last_state = current_state
                     if len(self.current_path) > 1:
-                        self.current_path[1:]
-                        print(self.current_path)
+                        self.current_path = self.current_path[1:]
                     else:
                         self.current_path = ""
                     return
