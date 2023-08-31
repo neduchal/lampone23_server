@@ -66,6 +66,7 @@ class LamponeServerRobotController(Node):
         self.current_time = time.time()
 
     def save_callback(self):
+        print("SAVE")
         ret, frame = self.cap.read()
         self.image = frame.copy()[260:761, 652:1328, :]
         cv2.imwrite("/var/www/html/image/image.png", frame)
