@@ -71,7 +71,7 @@ class LamponeServerRobotController(Node):
 
     def control_callback(self):
         ret, frame = self.cap.read()
-        self.image = frame.copy()[260:761, 652:1328, :]
+        self.image = frame.copy()
         if len(self.path) > 0 and self.trg == True:
             if len(self.current_path) > 0:
                 current_move = self.current_path[0]
@@ -181,7 +181,7 @@ class LamponeServerRobotController(Node):
         self.path.append(data.data)
         print(self.path)
         ret, frame = self.cap.read()
-        self.image = frame.copy()[260:761, 652:1328, :]
+        self.image = frame.copy()
         self.current_path = data.data
         if self.last_state is None:
             self.last_state = self.get_robot_position([-1, -1])
@@ -197,7 +197,7 @@ class LamponeServerRobotController(Node):
         """
             Vraci pozici robota X,Y v ramci mrizky a jeho natoceni na zaklade cteni ARUCO tagu.
         """
-        img = self.image.copy()
+        img = self.image.copy()[260:761, 652:1328, :]
 
         (corners, ids, rejected) = cv2.aruco.detectMarkers(img, self.arucoDict,
             parameters=self.arucoParams)
@@ -294,7 +294,7 @@ class LamponeServerRobotController(Node):
     def trigger_callback(self, msg):
         self.trg = True
         ret, frame = self.cap.read()
-        self.image = frame.copy()[260:761, 652:1328, :]
+        self.image = frame.copy()
         print("Trigger")
 
 def main(args=None):
