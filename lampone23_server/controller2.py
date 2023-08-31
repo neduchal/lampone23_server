@@ -67,13 +67,13 @@ class LamponeServerRobotController(Node):
 
     def save_callback(self):
         ret, frame = self.cap.read()
-        self.image = frame.copy()
+        self.image = frame.copy()[260:761, 652:1328, :]
         cv2.imwrite("/var/www/html/image/image.png", frame)
 
     def control_callback(self):
         if len(self.path) > 0 and self.trg == True:
             ret, frame = self.cap.read()
-            self.image = frame.copy()
+            self.image = frame.copy()[260:761, 652:1328, :]
             if len(self.current_path) > 0:
                 current_move = self.current_path[0]
                 current_state = self.get_robot_position(self.last_state[0:2])
@@ -173,7 +173,7 @@ class LamponeServerRobotController(Node):
         self.path.append(data.data)
         print(self.path)
         ret, frame = self.cap.read()
-        self.image = frame.copy()
+        self.image = frame.copy()[260:761, 652:1328, :]
         self.current_path = data.data
         if self.last_state is None:
             self.last_state = self.get_robot_position([-1, -1])
@@ -278,7 +278,7 @@ class LamponeServerRobotController(Node):
     def trigger_callback(self, msg):
         self.trg = True
         ret, frame = self.cap.read()
-        self.image = frame.copy()
+        self.image = frame.copy()[260:761, 652:1328, :]
         print("Trigger")
 
 def main(args=None):
