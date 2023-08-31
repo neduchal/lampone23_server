@@ -47,7 +47,7 @@ class LamponeServerRobotController(Node):
         self.twist_publisher = self.create_publisher(Twist, "/cmd_vel", 10)
         self.image = None
         timer_period = 30 # seconds
-        self.timer = self.create_timer(timer_period, self.save_callback)
+        self.timer2 = self.create_timer(timer_period, self.save_callback)
         self.path = []
         self.bridge = CvBridge()
         self.arucoDict = cv2.aruco.Dictionary_get(cv2.aruco.DICT_4X4_50)
