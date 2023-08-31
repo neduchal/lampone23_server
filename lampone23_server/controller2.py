@@ -61,7 +61,7 @@ class LamponeServerRobotController(Node):
         self.timer = self.create_timer(timer_period2, self.control_callback)
         for i in range(8):
             for j in range(8):
-                self.cells.append([i, j, int(55 + i/7 * (445-55)), int(75 + j/7 * (595 - 75))])
+                self.cells.append([i, j, int(45 + i/7 * (455-45)), int(65 + j/7 * (605 - 65))])
         self.size = 8
         self.current_time = time.time()
 
