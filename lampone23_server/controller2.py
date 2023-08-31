@@ -3,6 +3,7 @@ from rclpy.node import Node
 # dependencies rclpy image_transport cv_bridge sensor_msgs std_msgs opencv2
 import cv2
 import cv2.aruco
+
 from cv_bridge import CvBridge 
 from geometry_msgs.msg import Twist
 from sensor_msgs.msg import Image
@@ -21,14 +22,21 @@ class LamponeServerRobotController(Node):
             self.path_callback,
             10)
         self.solution_subscriber
-        
+        self.cap =  cv2.VideoCapture(f'nvarguscamerasrc sensor-mode=3 ! video/x-raw(memory:NVMM), width=1920, height=1080, format=(string)NV12, framerate=(fraction)29/1 ! nvvidconv ! video/x-raw, width=(int)1920, height=(int)1080, format=(string)BGRx ! videoconvert ! appsink')
+        """
         self.image_subscriber = self.create_subscription(
             Image,
             '/image',
             self.image_callback,
             10)
         self.image_subscriber
-        
+        """
+
+        if not self.cap.isOpened():
+            print("Cannot open camera")
+            exit()
+
+
         self.trigger_subscriber = self.create_subscription(
             Empty,
             '/lampone23/trigger',
@@ -59,6 +67,8 @@ class LamponeServerRobotController(Node):
 
     def control_callback(self):
         if len(self.path) > 0 and self.trg == True:
+            ret, frame = self.cap.read()
+            self.image = frame.copy()
             if len(self.current_path) > 0:
                 current_move = self.current_path[0]
                 current_state = self.get_robot_position(self.last_state[0:2])
@@ -157,15 +167,18 @@ class LamponeServerRobotController(Node):
     def path_callback(self, data):
         self.path.append(data.data)
         print(self.path)
+        ret, frame = self.cap.read()
+        self.image = frame.copy()
         self.current_path = data.data
         if self.last_state is None:
             self.last_state = self.get_robot_position([-1, -1])
-        pass
-    
+
+    """
     def image_callback(self, data):
         self.image = self.bridge.imgmsg_to_cv2(data)[260:761, 652:1328, :]
         print("IMAGE")
         pass
+    """
 
     def get_robot_position(self, last_position):
         """
@@ -259,6 +272,8 @@ class LamponeServerRobotController(Node):
     
     def trigger_callback(self, msg):
         self.trg = True
+        ret, frame = self.cap.read()
+        self.image = frame.copy()
         print("Trigger")
 
 def main(args=None):
