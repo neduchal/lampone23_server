@@ -157,7 +157,10 @@ class LamponeServerRobotController(Node):
         cY = int((topLeft[1] + bottomRight[1]) / 2.0)
         u_vec = [topLeft[0] - bottomLeft[0], topLeft[1] - bottomLeft[1]]
         u_vec = np.array(u_vec / np.linalg.norm(u_vec))
-        angle = np.arctan2(-u_vec[1], -u_vec[0])# Je to -pi az pi. 0 kdyz je kod nahoru
+        angle = np.arctan2(-u_vec[0], -u_vec[1])# Je to -pi az pi. 0 kdyz je kod nahoru
+        angle = 180 * angle/np.pi # Je to -pi az pi . zkontrolovat zda s tim pocita i zbytek kodu  
+        if angle < 0:
+            angle = angle + 360
         print(angle)
         return np.array([cX, cY, angle, -u_vec[0], -u_vec[1]])
 
@@ -220,7 +223,7 @@ class LamponeServerRobotController(Node):
         #    angle = last_state[2]
         #angle = 180 * np.arccos(current_vec.dot(last_vec))/np.pi
 
-        angle = 180 * (current_state[2] - last_state[2] - (np.pi/2)) / np.pi
+        angle = current_state[2] - last_state[2]
         if angle < -180:
             angle =  angle + 360
         elif angle > 180:
