@@ -3,7 +3,8 @@ import socket
 UDP_IP = "192.168.100.22"
 UDP_PORT = 9999
 #MESSAGE = b"FLFRF"
-MESSAGE = b"FLLF"
+#MESSAGE = b"FLLF"
+MESSAGE = b"FFFLFRFFRFLFF"
 
 print("UDP target IP: %s" % UDP_IP)
 print("UDP target port: %s" % UDP_PORT)
