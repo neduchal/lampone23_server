@@ -65,6 +65,8 @@ class LamponeServerRobotController(Node):
                 self.cells.append([i, j, int(45 + i/7 * (455-45)), int(65 + j/7 * (605 - 65))])
         self.size = 8
         self.current_time = time.time()
+        
+        self.last_e_angle = 0.0
 
     def save_callback(self):
         print("SAVE")
@@ -94,43 +96,47 @@ class LamponeServerRobotController(Node):
                     else:
                         self.current_path = ""
                     return
+                    
+                u_angle, self.last_e_angle = self.steering_rate(last_state=self.last_state, current_state=current_state, move=current_move, last_e_angle = self.last_e_angle)
                 move_msg = Twist()
                 if current_move == "L":
-                    move_msg.angular.z = -0.8
+                    move_msg.angular.z = u_angle
                 elif current_move == "R":
-                    move_msg.angular.z = 0.8
+                    move_msg.angular.z = u_angle
                 elif current_move == "F":
                     move_msg.linear.x = 0.65
                     last_angle = self.last_state[2]
                     current_angle = current_state[2]
-                    diff = 0
-                    if last_angle > 350 or last_angle < 10:
-                        pass
-                    elif last_angle > 80 and last_angle < 100:
-                        diff = 90 - current_angle
-                    elif last_angle > 170 and last_angle < 190:
-                        diff = 180 - current_angle
-                    elif last_angle > 260 and last_angle < 280:
-                        diff = 270 - current_angle
-                    if diff > 3:
-                        move_msg.angular.z = -0.05
-                    elif diff < -3:
-                        move_msg.angular.z = 0.05
+                    # diff = 0
+                    # if last_angle > 350 or last_angle < 10:
+                    #     pass
+                    # elif last_angle > 80 and last_angle < 100:
+                    #     diff = 90 - current_angle
+                    # elif last_angle > 170 and last_angle < 190:
+                    #     diff = 180 - current_angle
+                    # elif last_angle > 260 and last_angle < 280:
+                    #     diff = 270 - current_angle
+                    # if diff > 3:
+                    #     move_msg.angular.z = -0.05
+                    # elif diff < -3:
+                    #     move_msg.angular.z = 0.05
+                    move_msg.angular.z = u_angle
                 elif current_move == "B":
                     move_msg.linear.x = -0.65
 
-                    if last_angle > 350 or last_angle < 10:
-                        pass
-                    elif last_angle > 80 and last_angle < 100:
-                        diff = 90 - current_angle
-                    elif last_angle > 170 and last_angle < 190:
-                        diff = 180 - current_angle
-                    elif last_angle > 260 and last_angle < 280:
-                        diff = 270 - current_angle
-                    if diff > 3:
-                        move_msg.angular.z = 0.05
-                    elif diff < 3:
-                        move_msg.angular.z = -0.05                
+                    # if last_angle > 350 or last_angle < 10:
+                    #     pass
+                    # elif last_angle > 80 and last_angle < 100:
+                    #     diff = 90 - current_angle
+                    # elif last_angle > 170 and last_angle < 190:
+                    #     diff = 180 - current_angle
+                    # elif last_angle > 260 and last_angle < 280:
+                    #     diff = 270 - current_angle
+                    # if diff > 3:
+                    #     move_msg.angular.z = 0.05
+                    # elif diff < 3:
+                    #     move_msg.angular.z = -0.05
+                    move_msg.angular.z = u_angle                
                 else:
                     # DO NOTHING
                     pass
@@ -269,6 +275,34 @@ class LamponeServerRobotController(Node):
         else:
             return True
         return False
+
+    def steering_rate(self, last_state, current_state, move, last_e_angle = 0):
+        state = current_state - last_state
+
+        angle = current_state[2] - last_state[2]
+        if angle < -180:
+            angle =  angle + 360
+        elif angle > 180:
+            angle = -(360 - angle)
+        
+        e_angle = 0.0
+        angular_rate = 0.0
+        Kp = 0.7
+        Kd = 0.1
+        
+        if move == "L":
+            #print(angle)
+            e_angle = angle - 90
+        elif move == "R":
+            #print(angle)
+            e_angle = angle + 90
+        elif move == "F":
+            e_angle = angle
+        elif move == "B":
+            e_angle = angle
+            
+        u_angle = Kp*e_angle + Kd*(e_angle - last_e_angle)
+        return u_angle, e_angle
 
     """
     def process_path(self, path):
