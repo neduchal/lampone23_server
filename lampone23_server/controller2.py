@@ -113,9 +113,9 @@ class LamponeServerRobotController(Node):
                     elif last_angle > 260 and last_angle < 280:
                         diff = 270 - current_angle
                     if diff > 3:
-                        move_msg.angular.z = -0.05
+                        move_msg.angular.z = -0.08
                     elif diff < -3:
-                        move_msg.angular.z = 0.05
+                        move_msg.angular.z = 0.08
                 elif current_move == "B":
                     move_msg.linear.x = -0.65
 
