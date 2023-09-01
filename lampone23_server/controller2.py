@@ -287,8 +287,8 @@ class LamponeServerRobotController(Node):
         
         e_angle = 0.0
         angular_rate = 0.0
-        Kp = 0.3
-        Kd = 0.02
+        Kp = 0.1
+        Kd = 0.01
         
         if move == "L":
             #print(angle)
@@ -301,7 +301,7 @@ class LamponeServerRobotController(Node):
         elif move == "B":
             e_angle = angle
             
-        u_angle = Kp*e_angle + Kd*(e_angle - last_e_angle)
+        u_angle = -Kp*e_angle #+ -Kd*(e_angle - last_e_angle)/
         return u_angle, e_angle
 
     """
