@@ -23,7 +23,7 @@ class LamponeServerRobotController(Node):
             10)
         self.solution_subscriber
         self.cap =  cv2.VideoCapture(f'nvarguscamerasrc sensor-mode=3 ! video/x-raw(memory:NVMM), width=1920, height=1080, format=(string)NV12, framerate=(fraction)20/1 ! nvvidconv ! video/x-raw, width=(int)1920, height=(int)1080, format=(string)BGRx ! videoconvert ! appsink')
-        self.cap.set(cv2.CAP_PROP_BUFFERSIZE, 2)
+        self.cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)
         """
         self.image_subscriber = self.create_subscription(
             Image,
@@ -225,11 +225,11 @@ class LamponeServerRobotController(Node):
 
         if move == "L":
             #print(angle)
-            if angle > 80 and angle < 100:
+            if angle > 85 and angle < 95:
                 return True
         elif move == "R":
             #print(angle)
-            if angle  > -100 and angle < -80:
+            if angle  > -95 and angle < -85:
                 return True       
         elif move == "F":
             if np.abs(state[0] + state[1]) > 0 : 
