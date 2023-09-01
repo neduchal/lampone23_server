@@ -225,11 +225,11 @@ class LamponeServerRobotController(Node):
 
         if move == "L":
             #print(angle)
-            if angle > 75 and angle < 85:
+            if angle > 65 and angle < 75:
                 return True
         elif move == "R":
             #print(angle)
-            if angle  > -85 and angle < -75:
+            if angle  > -75 and angle < -65:
                 return True       
         elif move == "F":
             if np.abs(state[0] + state[1]) > 0 : 
