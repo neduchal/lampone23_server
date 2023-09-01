@@ -23,6 +23,7 @@ class LamponeServerRobotController(Node):
             10)
         self.solution_subscriber
         self.cap =  cv2.VideoCapture(f'nvarguscamerasrc sensor-mode=3 ! video/x-raw(memory:NVMM), width=1920, height=1080, format=(string)NV12, framerate=(fraction)20/1 ! nvvidconv ! video/x-raw, width=(int)1920, height=(int)1080, format=(string)BGRx ! videoconvert ! appsink')
+        self.cap.set(cv2.CAP_PROP_BUFFERSIZE, 2)
         """
         self.image_subscriber = self.create_subscription(
             Image,
